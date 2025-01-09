@@ -1,10 +1,12 @@
 package com.joaopereira.renda_organziada.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.catalina.User;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -22,8 +24,14 @@ public class ExpenseEntity {
     private UserEntity user_fk;
 
     private UUID category_fk;
-    private double expense_value;
+
+    @Column(columnDefinition = "DECIMAL(15,2)", nullable = false)
+    private BigDecimal expense_value;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate expense_date;
+
+    @Column(length = 100)
     private String description;
 
 
@@ -51,11 +59,11 @@ public class ExpenseEntity {
         this.category_fk = category_fk;
     }
 
-    public double getExpense_value() {
+    public BigDecimal getExpense_value() {
         return expense_value;
     }
 
-    public void setExpense_value(double expense_value) {
+    public void setExpense_value(BigDecimal expense_value) {
         this.expense_value = expense_value;
     }
 

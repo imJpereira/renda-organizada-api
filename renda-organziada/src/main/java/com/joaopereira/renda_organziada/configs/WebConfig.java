@@ -10,10 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
-                //.allowedOrigins("http://localhost:5173")
-                //.allowedMethods("GET", "POST", "PUT", "DELETE")
-                //.allowedHeaders("*");
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:5173","http://192.168.100.17:5173")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*");
 
         //Quando a aplicação tiver autenticação, pode ser que seja necessário adicionar mais configurações ao CORS
     }
