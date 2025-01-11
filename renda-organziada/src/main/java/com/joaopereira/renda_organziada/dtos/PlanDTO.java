@@ -9,49 +9,49 @@ import java.time.LocalDate;
 public class PlanDTO {
     //Fazer user_fk --> Pesquisar sobre autenticação
 
-    private String plan_title;
-    private LocalDate start_date;
-    private LocalDate final_date;
-    private BigDecimal initial_capital;
-    private BigDecimal total_spent;
+    private String title;
+    private LocalDate startDate;
+    private LocalDate finalDate;
+    private BigDecimal initialCapital;
+    private BigDecimal totalSpent;
 
-    public String getPlan_title() {
-        return plan_title;
+    public String getTitle() {
+        return title;
     }
 
-    public void setPlan_title(String plan_title) {
-        this.plan_title = plan_title;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public LocalDate getStart_date() {
-        return start_date;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setStart_date(LocalDate start_date) {
-        this.start_date = start_date;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDate getFinal_date() {
-        return final_date;
+    public LocalDate getFinalDate() {
+        return finalDate;
     }
 
-    public void setFinal_date(LocalDate final_date) {
-        this.final_date = final_date;
+    public void setFinalDate(LocalDate finalDate) {
+        this.finalDate = finalDate;
     }
 
-    public BigDecimal getInitial_capital() {
-        return initial_capital;
+    public BigDecimal getInitialCapital() {
+        return initialCapital;
     }
 
-    public void setInitial_capital(BigDecimal initial_capital) {
-        this.initial_capital = initial_capital;
+    public void setInitialCapital(BigDecimal initialCapital) {
+        this.initialCapital = initialCapital;
     }
 
-    public BigDecimal getTotal_spent() {
-        return total_spent;
+    public BigDecimal getTotalSpent() {
+        return totalSpent;
     }
 
-    public void setTotal_spent(BigDecimal total_spent) {
-        this.total_spent = total_spent;
+    public void setTotalSpent(BigDecimal totalSpent) {
+        this.totalSpent = totalSpent;
     }
 }

@@ -1,38 +1,42 @@
 package com.joaopereira.renda_organziada.dtos;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import jakarta.persistence.Column;
 import lombok.*;
 
 public class ExpenseDTO {
-    private UUID category_fk;
-    private double expense_value;
-    private LocalDate expense_date;
+
+    private UUID category;
+    private BigDecimal value;
+    private LocalDate expenseDate;
     private String description;
 
-    public UUID getCategory_fk() {
-        return category_fk;
+    public UUID getCategory() {
+        return category;
     }
 
-    public void setCategory_fk(UUID category_fk) {
-        this.category_fk = category_fk;
+    public void setCategory(UUID category) {
+        this.category = category;
     }
 
-    public double getExpense_value() {
-        return expense_value;
+    public BigDecimal getValue() {
+        return value;
     }
 
-    public void setExpense_value(double expense_value) {
-        this.expense_value = expense_value;
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 
-    public LocalDate getExpense_date() {
-        return expense_date;
+    public LocalDate getExpenseDate() {
+        return expenseDate;
     }
 
-    public void setExpense_date(LocalDate expense_date) {
-        this.expense_date = expense_date;
+    public void setExpenseDate(LocalDate expenseDate) {
+        this.expenseDate = expenseDate;
     }
 
     public String getDescription() {

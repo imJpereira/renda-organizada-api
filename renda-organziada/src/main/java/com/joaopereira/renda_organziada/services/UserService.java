@@ -23,9 +23,7 @@ public class UserService {
     }
 
     public List<UserEntity> findAll() throws Exception {
-        var usersList = repository.findAll();
-
-        return usersList;
+        return repository.findAll();
     }
 
 }

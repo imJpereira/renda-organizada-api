@@ -11,35 +11,39 @@ public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID category_id;
+    private UUID categoryId;
 
     @ManyToOne
     @JoinColumn(name = "plan_id", nullable = false)
-    private PlanEntity plan_fk;
+    private PlanEntity plan;
 
     @Column(length = 100, nullable = false)
     private String description;
 
     @Column(columnDefinition = "DECIMAL(15,2)")
-    private BigDecimal target_value;
+    private BigDecimal targetValue;
 
     @Column(columnDefinition = "DECIMAL(15,2)")
-    private BigDecimal actual_value;
+    private BigDecimal actualValue;
 
-    public UUID getCategory_id() {
-        return category_id;
+
+    // GETTERS AND SETTERS
+
+
+    public UUID getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory_id(UUID category_id) {
-        this.category_id = category_id;
+    public void setCategoryId(UUID categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public PlanEntity getPlan_fk() {
-        return plan_fk;
+    public PlanEntity getPlan() {
+        return plan;
     }
 
-    public void setPlan_fk(PlanEntity plan_fk) {
-        this.plan_fk = plan_fk;
+    public void setPlan(PlanEntity plan) {
+        this.plan = plan;
     }
 
     public String getDescription() {
@@ -50,19 +54,19 @@ public class CategoryEntity {
         this.description = description;
     }
 
-    public BigDecimal getTarget_value() {
-        return target_value;
+    public BigDecimal getTargetValue() {
+        return targetValue;
     }
 
-    public void setTarget_value(BigDecimal target_value) {
-        this.target_value = target_value;
+    public void setTargetValue(BigDecimal targetValue) {
+        this.targetValue = targetValue;
     }
 
-    public BigDecimal getActual_value() {
-        return actual_value;
+    public BigDecimal getActualValue() {
+        return actualValue;
     }
 
-    public void setActual_value(BigDecimal actual_value) {
-        this.actual_value = actual_value;
+    public void setActualValue(BigDecimal actualValue) {
+        this.actualValue = actualValue;
     }
 }

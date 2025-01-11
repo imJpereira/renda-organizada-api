@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface PlanRepository extends JpaRepository<PlanEntity, UUID> {
 
-    @Query("SELECT p FROM PlanEntity p ORDER BY p.final_date DESC")
-    List<PlanEntity> findAllSortedByDate();
+    @Query("SELECT p FROM PlanEntity p ORDER BY p.finalDate DESC")
+    List<PlanEntity> findAllSortedByDateDesc();
 
 }

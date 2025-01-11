@@ -10,8 +10,8 @@ public class CategoryDTO {
     //Fazer plan_fk  --> Pesquisar sobre autenticação
 
     private String description;
-    private BigDecimal target_value;
-    private BigDecimal actual_value;
+    private BigDecimal targetValue;
+    private BigDecimal actualValue;
 
     public String getDescription() {
         return description;
@@ -21,19 +21,19 @@ public class CategoryDTO {
         this.description = description;
     }
 
-    public BigDecimal getTarget_value() {
-        return target_value;
+    public BigDecimal getTargetValue() {
+        return targetValue;
     }
 
-    public void setTarget_value(BigDecimal target_value) {
-        this.target_value = target_value;
+    public void setTargetValue(BigDecimal targetValue) {
+        this.targetValue = targetValue;
     }
 
-    public BigDecimal getActual_value() {
-        return actual_value;
+    public BigDecimal getActualValue() {
+        return actualValue;
     }
 
-    public void setActual_value(BigDecimal actual_value) {
-        this.actual_value = actual_value;
+    public void setActualValue(BigDecimal actualValue) {
+        this.actualValue = actualValue;
     }
 }

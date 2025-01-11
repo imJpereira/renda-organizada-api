@@ -5,6 +5,7 @@ import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CategoryService {
@@ -14,12 +15,12 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<CategoryEntity> findAll() throws Exception {
-        return categoryRepository.findAll();
+    public List<CategoryEntity> findCategories(UUID planId) throws Exception {
+        return categoryRepository.findByPlan_PlanId(planId);
     }
 
     public CategoryEntity create(CategoryEntity newCategory) throws Exception {
-
         return categoryRepository.save(newCategory);
     }
+
 }

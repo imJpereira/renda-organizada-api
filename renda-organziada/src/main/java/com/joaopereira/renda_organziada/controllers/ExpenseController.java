@@ -32,7 +32,7 @@ public class ExpenseController {
 
         //Fazer quando autenticação estiver pronta
         var user = userService.findAll().get(0);
-        newExpense.setUser_fk(user);
+        newExpense.setUser(user);
 
         expenseService.save(newExpense);
 

@@ -24,7 +24,7 @@ public class PlanService {
     }
 
     public List<PlanEntity> findAllSortedByDate() throws Exception {
-        return planRepository.findAllSortedByDate();
+        return planRepository.findAllSortedByDateDesc();
     }
 
     public void deleteById(UUID plan_id) throws Exception {

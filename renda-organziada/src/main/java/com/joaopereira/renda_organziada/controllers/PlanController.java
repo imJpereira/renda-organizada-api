@@ -4,7 +4,6 @@ import com.joaopereira.renda_organziada.dtos.PlanDTO;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.services.PlanService;
 import com.joaopereira.renda_organziada.services.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +30,7 @@ public class PlanController {
         BeanUtils.copyProperties(planDTO, newPlan);
 
         var user = userService.findAll().get(0);
-        newPlan.setUser_fk(user);
+        newPlan.setUser(user);
 
         planService.save(newPlan);
         return ResponseEntity.ok("Plano criado com sucesso!");

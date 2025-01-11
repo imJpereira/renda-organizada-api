@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -13,21 +15,35 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID user_id;
+    private UUID userId;
+
+    @OneToMany(mappedBy = "user")
+    private List<PlanEntity> plans = new ArrayList<>();
 
     private String cpf;
-    private String user_name;
+    private String name;
     private String email;
 
     @JsonIgnore
-    private String user_password;
+    private String password;
 
-    public UUID getUser_id() {
-        return user_id;
+
+    // GETTERS AND SETTERS
+
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setUser_id(UUID user_id) {
-        this.user_id = user_id;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
+    public List<PlanEntity> getPlans() {
+        return plans;
+    }
+
+    public void setPlans(List<PlanEntity> plans) {
+        this.plans = plans;
     }
 
     public String getCpf() {
@@ -38,12 +54,12 @@ public class UserEntity {
         this.cpf = cpf;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getName() {
+        return name;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -54,11 +70,11 @@ public class UserEntity {
         this.email = email;
     }
 
-    public String getUser_password() {
-        return user_password;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUser_password(String user_password) {
-        this.user_password = user_password;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

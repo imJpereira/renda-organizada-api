@@ -2,9 +2,9 @@ package com.joaopereira.renda_organziada.dtos;
 
 public class SignUpDTO {
     private String cpf;
-    private String user_name;
+    private String name;
     private String email;
-    private String user_password;
+    private String password;
 
     public String getCpf() {
         return cpf;
@@ -14,20 +14,12 @@ public class SignUpDTO {
         this.cpf = cpf;
     }
 
-    public String getUser_password() {
-        return user_password;
+    public String getName() {
+        return name;
     }
 
-    public void setUser_password(String user_password) {
-        this.user_password = user_password;
-    }
-
-    public String getUser_name() {
-        return user_name;
-    }
-
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -38,5 +30,11 @@ public class SignUpDTO {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

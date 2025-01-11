@@ -1,10 +1,13 @@
 package com.joaopereira.renda_organziada.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -13,82 +16,97 @@ public class PlanEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID plan_id;
+    private UUID planId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user_fk;
+    private UserEntity user;
+
+    @OneToMany(mappedBy = "plan")
+    private List<CategoryEntity> categories = new ArrayList<>();
 
     @Column(length = 100, nullable = false)
-    private String plan_title;
+    private String title;
 
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate start_date;
+    private LocalDate startDate;
 
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate final_date;
+    private LocalDate finalDate;
 
     @Column(columnDefinition = "DECIMAL(15,2)")
-    private BigDecimal initial_capital;
+    private BigDecimal initialCapital;
 
     @Column(columnDefinition = "DECIMAL(15,2)")
-    private BigDecimal total_spent;
+    private BigDecimal totalSpent;
 
-    public UUID getPlan_id() {
-        return plan_id;
+
+    // GETTES AND SETTER
+
+    public UUID getPlanId() {
+        return planId;
     }
 
-    public void setPlan_id(UUID plan_id) {
-        this.plan_id = plan_id;
+    public void setPlanId(UUID planId) {
+        this.planId = planId;
     }
 
-    public UserEntity getUser_fk() {
-        return user_fk;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setUser_fk(UserEntity user_fk) {
-        this.user_fk = user_fk;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
-    public String getPlan_title() {
-        return plan_title;
+    public List<CategoryEntity> getCategories() {
+        return categories;
     }
 
-    public void setPlan_title(String plan_title) {
-        this.plan_title = plan_title;
+    public void setCategories(List<CategoryEntity> categories) {
+        this.categories = categories;
     }
 
-    public LocalDate getStart_date() {
-        return start_date;
+    public String getTitle() {
+        return title;
     }
 
-    public void setStart_date(LocalDate start_date) {
-        this.start_date = start_date;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public LocalDate getFinal_date() {
-        return final_date;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setFinal_date(LocalDate final_date) {
-        this.final_date = final_date;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
-    public BigDecimal getInitial_capital() {
-        return initial_capital;
+    public LocalDate getFinalDate() {
+        return finalDate;
     }
 
-    public void setInitial_capital(BigDecimal initial_capital) {
-        this.initial_capital = initial_capital;
+    public void setFinalDate(LocalDate finalDate) {
+        this.finalDate = finalDate;
     }
 
-    public BigDecimal getTotal_spent() {
-        return total_spent;
+    public BigDecimal getInitialCapital() {
+        return initialCapital;
     }
 
-    public void setTotal_spent(BigDecimal total_spent) {
-        this.total_spent = total_spent;
+    public void setInitialCapital(BigDecimal initialCapital) {
+        this.initialCapital = initialCapital;
+    }
+
+    public BigDecimal getTotalSpent() {
+        return totalSpent;
+    }
+
+    public void setTotalSpent(BigDecimal totalSpent) {
+        this.totalSpent = totalSpent;
     }
 }

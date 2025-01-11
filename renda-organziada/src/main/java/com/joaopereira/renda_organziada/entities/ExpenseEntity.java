@@ -17,62 +17,64 @@ public class ExpenseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID expense_id;
+    private UUID expenseId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserEntity user_fk;
+    private UserEntity user;
 
-    private UUID category_fk;
+    private UUID category;
 
     @Column(columnDefinition = "DECIMAL(15,2)", nullable = false)
-    private BigDecimal expense_value;
+    private BigDecimal value;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate expense_date;
+    private LocalDate expenseDate;
 
     @Column(length = 100)
     private String description;
 
+    //GETTERS AND SETTERS
 
-    public UUID getExpense_id() {
-        return expense_id;
+
+    public UUID getExpenseId() {
+        return expenseId;
     }
 
-    public void setExpense_id(UUID expense_id) {
-        this.expense_id = expense_id;
+    public void setExpenseId(UUID expenseId) {
+        this.expenseId = expenseId;
     }
 
-    public UserEntity getUser_fk() {
-        return user_fk;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setUser_fk(UserEntity user_fk) {
-        this.user_fk = user_fk;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
-    public UUID getCategory_fk() {
-        return category_fk;
+    public UUID getCategory() {
+        return category;
     }
 
-    public void setCategory_fk(UUID category_fk) {
-        this.category_fk = category_fk;
+    public void setCategory(UUID category) {
+        this.category = category;
     }
 
-    public BigDecimal getExpense_value() {
-        return expense_value;
+    public BigDecimal getValue() {
+        return value;
     }
 
-    public void setExpense_value(BigDecimal expense_value) {
-        this.expense_value = expense_value;
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 
-    public LocalDate getExpense_date() {
-        return expense_date;
+    public LocalDate getExpenseDate() {
+        return expenseDate;
     }
 
-    public void setExpense_date(LocalDate expense_date) {
-        this.expense_date = expense_date;
+    public void setExpenseDate(LocalDate expenseDate) {
+        this.expenseDate = expenseDate;
     }
 
     public String getDescription() {
