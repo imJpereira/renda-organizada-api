@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class PlanDTO {
+    //Fazer user_fk --> Pesquisar sobre autenticação
+
     private String plan_title;
     private LocalDate start_date;
     private LocalDate final_date;

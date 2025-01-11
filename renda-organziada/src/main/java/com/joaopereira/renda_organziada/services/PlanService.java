@@ -5,6 +5,7 @@ import com.joaopereira.renda_organziada.repositories.PlanRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PlanService {
@@ -24,5 +25,9 @@ public class PlanService {
 
     public List<PlanEntity> findAllSortedByDate() throws Exception {
         return planRepository.findAllSortedByDate();
+    }
+
+    public void deleteById(UUID plan_id) throws Exception {
+        planRepository.deleteById(plan_id);
     }
 }

@@ -30,7 +30,7 @@ public class ExpenseController {
         ExpenseEntity newExpense = new ExpenseEntity();
         BeanUtils.copyProperties(expenseDTO, newExpense);
 
-        //Quando a autenticação ficar pronta, trocar estes comandos pela autenticação
+        //Fazer quando autenticação estiver pronta
         var user = userService.findAll().get(0);
         newExpense.setUser_fk(user);
 

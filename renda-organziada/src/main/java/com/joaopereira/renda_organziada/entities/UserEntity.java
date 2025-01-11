@@ -18,6 +18,8 @@ public class UserEntity {
     private String cpf;
     private String user_name;
     private String email;
+
+    @JsonIgnore
     private String user_password;
 
     public UUID getUser_id() {
