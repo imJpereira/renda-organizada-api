@@ -11,5 +11,4 @@ import java.util.UUID;
 public interface CategoryRepository extends JpaRepository<CategoryEntity, UUID> {
 
     List<CategoryEntity> findByPlan_PlanId(UUID planPlanId);
-
 }

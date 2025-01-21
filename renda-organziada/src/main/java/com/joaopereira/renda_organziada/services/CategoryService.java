@@ -15,12 +15,12 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<CategoryEntity> findCategories(UUID planId) throws Exception {
-        return categoryRepository.findByPlan_PlanId(planId);
+    public CategoryEntity save(CategoryEntity newCategory) throws Exception {
+        return categoryRepository.save(newCategory);
     }
 
-    public CategoryEntity create(CategoryEntity newCategory) throws Exception {
-        return categoryRepository.save(newCategory);
+    public List<CategoryEntity> findCategories(UUID planId) throws Exception {
+        return categoryRepository.findByPlan_PlanId(planId);
     }
 
 }

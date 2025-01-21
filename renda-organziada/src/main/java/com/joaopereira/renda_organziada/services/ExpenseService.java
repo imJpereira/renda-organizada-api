@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -20,24 +21,35 @@ public class ExpenseService {
         this.expenseRepository = expenseRepository;
     }
 
-    public ExpenseEntity save(ExpenseEntity newExpense) throws Exception {
+    public ExpenseEntity save(ExpenseEntity expense) throws Exception {
 
-        expenseRepository.save(newExpense);
+        if (expense.getUser() == null || expense.getUser().getUserId() == null) {
+            throw new IllegalArgumentException("Usuário inválido");
+        }
 
-        return newExpense;
+        if (expense.getValue() == null) {
+            throw new IllegalArgumentException("Valor inválido: valor nulo");
+        }
+
+        if (expense.getValue().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor inválido: menor ou igual à zero");
+        }
+
+        expenseRepository.save(expense);
+
+        return expense;
     }
 
     public List<ExpenseEntity> findAllSortedByDate() throws Exception {
         return expenseRepository.findAllSortedByDateDesc();
     }
 
-    public ExpenseEntity findById(UUID id) throws Exception {
-        return expenseRepository.findById(id).orElseThrow(() -> new Exception("Registro não encontrado!"));
-    }
+    public void delete(UUID expense_id) throws Exception {
+        if (!expenseRepository.existsById(expense_id)) {
+            throw new IllegalArgumentException("A Despesa com id \""+expense_id+"\" não existe");
+        }
 
-    public void delete(UUID id) throws Exception {
-        findById(id);
-        expenseRepository.deleteById(id);
+        expenseRepository.deleteById(expense_id);
     }
 
 }
