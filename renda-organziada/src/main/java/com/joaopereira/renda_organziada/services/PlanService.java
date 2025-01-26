@@ -40,6 +40,10 @@ public class PlanService {
         return planRepository.findAllSortedByDateDesc();
     }
 
+    public PlanEntity findById(UUID id) throws Exception {
+        return planRepository.findById(id).orElseThrow(() -> new Exception("Este plano não existe"));
+    }
+
     public void deleteById(UUID plan_id) throws Exception {
         if (!planRepository.existsById(plan_id)) {
             throw new IllegalArgumentException("O Plano com id \""+plan_id+"\" não existe");

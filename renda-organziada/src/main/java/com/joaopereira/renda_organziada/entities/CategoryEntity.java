@@ -1,5 +1,6 @@
 package com.joaopereira.renda_organziada.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ public class CategoryEntity {
     private UUID categoryId;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "plan_id", nullable = false)
     private PlanEntity plan;
 

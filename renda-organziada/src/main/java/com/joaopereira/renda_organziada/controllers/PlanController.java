@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,8 +30,8 @@ public class PlanController {
         var newPlan = new PlanEntity();
         BeanUtils.copyProperties(planDTO, newPlan);
 
-        var user = userService.findAll().get(0);
-        newPlan.setUser(user);
+        newPlan.setUser(userService.findAll().get(0));
+        newPlan.setTotalSpent(BigDecimal.ZERO);
 
         planService.save(newPlan);
         return ResponseEntity.ok("Plano criado com sucesso!");
@@ -40,6 +41,11 @@ public class PlanController {
     public ResponseEntity<List<PlanEntity>> findAll() throws Exception {
         var plans = planService.findAllSortedByDate();
         return ResponseEntity.ok(plans);
+    }
+
+    @GetMapping("/{plan_id}")
+    public ResponseEntity<PlanEntity> findById(@PathVariable UUID plan_id) throws Exception {
+        return ResponseEntity.ok(planService.findById(plan_id));
     }
 
     @DeleteMapping("/delete/{plan_id}")

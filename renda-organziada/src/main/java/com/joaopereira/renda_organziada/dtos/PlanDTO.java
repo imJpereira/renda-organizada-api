@@ -13,7 +13,6 @@ public class PlanDTO {
     private LocalDate startDate;
     private LocalDate finalDate;
     private BigDecimal initialCapital;
-    private BigDecimal totalSpent;
 
     public String getTitle() {
         return title;
@@ -47,11 +46,4 @@ public class PlanDTO {
         this.initialCapital = initialCapital;
     }
 
-    public BigDecimal getTotalSpent() {
-        return totalSpent;
-    }
-
-    public void setTotalSpent(BigDecimal totalSpent) {
-        this.totalSpent = totalSpent;
-    }
 }
