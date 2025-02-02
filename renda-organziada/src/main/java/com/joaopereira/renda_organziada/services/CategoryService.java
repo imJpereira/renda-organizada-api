@@ -23,4 +23,13 @@ public class CategoryService {
         return categoryRepository.findByPlan_PlanId(planId);
     }
 
+    public CategoryEntity findByCategoryId(UUID cateogryId) throws Exception {
+        return categoryRepository.findById(cateogryId).orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada"));
+
+    }
+
+    public void delete(UUID categoryId) throws Exception {
+        categoryRepository.deleteById(categoryId);
+    }
+
 }

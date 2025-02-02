@@ -2,6 +2,7 @@ package com.joaopereira.renda_organziada.controllers;
 
 import com.joaopereira.renda_organziada.dtos.ExpenseDTO;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
+import com.joaopereira.renda_organziada.services.CategoryService;
 import com.joaopereira.renda_organziada.services.ExpenseService;
 import com.joaopereira.renda_organziada.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,12 @@ import java.util.UUID;
 public class ExpenseController {
     private final ExpenseService expenseService;
     private final UserService userService;
+    private final CategoryService categoryService;
 
-    public ExpenseController(ExpenseService expenseService, UserService userService) {
+    public ExpenseController(ExpenseService expenseService, UserService userService, CategoryService categoryService) {
         this.expenseService = expenseService;
         this.userService = userService;
+        this.categoryService = categoryService;
     }
 
     @PostMapping("/create")
@@ -31,8 +34,10 @@ public class ExpenseController {
         BeanUtils.copyProperties(expenseDTO, newExpense);
 
         //Fazer quando autenticação estiver pronta
-        var user = userService.findAll().get(0);
-        newExpense.setUser(user);
+        newExpense.setUser(userService.findAll().get(0));
+
+        var category = categoryService.findByCategoryId(expenseDTO.getCategory());
+        if (category != null) newExpense.setCategory(category);
 
         expenseService.save(newExpense);
 
@@ -49,6 +54,12 @@ public class ExpenseController {
         expenseService.delete(id);
 
         return ResponseEntity.ok("Deletado com sucesso");
+    }
+
+    @GetMapping("/category/{category_id}")
+    public ResponseEntity<List<ExpenseEntity>> findByCategory(@PathVariable UUID category_id) throws Exception
+    {
+        return ResponseEntity.ok(expenseService.findByCategory(category_id));
     }
 
     @ExceptionHandler

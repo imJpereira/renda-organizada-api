@@ -23,7 +23,7 @@ public class PlanEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @OneToMany(mappedBy = "plan")
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CategoryEntity> categories = new ArrayList<>();
 
     @Column(length = 100, nullable = false)

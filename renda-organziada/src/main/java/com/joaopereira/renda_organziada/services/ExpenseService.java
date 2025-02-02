@@ -44,6 +44,10 @@ public class ExpenseService {
         return expenseRepository.findAllSortedByDateDesc();
     }
 
+    public List<ExpenseEntity> findByCategory(UUID category_id) throws Exception {
+        return expenseRepository.findByCategory_CategoryId(category_id);
+    }
+
     public void delete(UUID expense_id) throws Exception {
         if (!expenseRepository.existsById(expense_id)) {
             throw new IllegalArgumentException("A Despesa com id \""+expense_id+"\" não existe");

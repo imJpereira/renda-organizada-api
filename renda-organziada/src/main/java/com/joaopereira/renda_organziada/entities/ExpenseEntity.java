@@ -25,7 +25,9 @@ public class ExpenseEntity {
     @JsonIgnore
     private UserEntity user;
 
-    private UUID category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity category;
 
     @Column(columnDefinition = "DECIMAL(15,2)", nullable = false)
     private BigDecimal value;
@@ -55,11 +57,11 @@ public class ExpenseEntity {
         this.user = user;
     }
 
-    public UUID getCategory() {
+    public CategoryEntity getCategory() {
         return category;
     }
 
-    public void setCategory(UUID category) {
+    public void setCategory(CategoryEntity category) {
         this.category = category;
     }
 

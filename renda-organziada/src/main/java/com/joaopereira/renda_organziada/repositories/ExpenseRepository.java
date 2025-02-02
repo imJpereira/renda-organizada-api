@@ -13,4 +13,6 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, UUID> {
 
     @Query("SELECT e FROM ExpenseEntity e ORDER BY e.expenseDate DESC ")
     List<ExpenseEntity> findAllSortedByDateDesc();
+
+    List<ExpenseEntity> findByCategory_CategoryId(UUID category);
 }

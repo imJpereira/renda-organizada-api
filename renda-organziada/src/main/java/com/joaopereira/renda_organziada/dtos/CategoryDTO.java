@@ -6,12 +6,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class CategoryDTO {
-
-    //Fazer plan_fk  --> Pesquisar sobre autenticação
-
     private String description;
     private BigDecimal targetValue;
-    private BigDecimal actualValue;
 
     public String getDescription() {
         return description;
@@ -29,11 +25,4 @@ public class CategoryDTO {
         this.targetValue = targetValue;
     }
 
-    public BigDecimal getActualValue() {
-        return actualValue;
-    }
-
-    public void setActualValue(BigDecimal actualValue) {
-        this.actualValue = actualValue;
-    }
 }

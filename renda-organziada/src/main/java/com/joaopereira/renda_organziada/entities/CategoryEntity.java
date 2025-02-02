@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -18,6 +19,10 @@ public class CategoryEntity {
     @JsonIgnore
     @JoinColumn(name = "plan_id", nullable = false)
     private PlanEntity plan;
+
+    @OneToMany(mappedBy = "category")
+    @JsonIgnore
+    private List<ExpenseEntity> expenses;
 
     @Column(length = 100, nullable = false)
     private String description;
@@ -70,5 +75,13 @@ public class CategoryEntity {
 
     public void setActualValue(BigDecimal actualValue) {
         this.actualValue = actualValue;
+    }
+
+    public List<ExpenseEntity> getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(List<ExpenseEntity> expenses) {
+        this.expenses = expenses;
     }
 }
