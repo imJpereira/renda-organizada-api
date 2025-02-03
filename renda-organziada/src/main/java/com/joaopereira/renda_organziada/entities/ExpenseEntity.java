@@ -26,7 +26,7 @@ public class ExpenseEntity {
     private UserEntity user;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = true)
     private CategoryEntity category;
 
     @Column(columnDefinition = "DECIMAL(15,2)", nullable = false)

@@ -2,6 +2,8 @@ package com.joaopereira.renda_organziada.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,6 +20,7 @@ public class CategoryEntity {
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "plan_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private PlanEntity plan;
 
     @OneToMany(mappedBy = "category")
@@ -35,7 +38,6 @@ public class CategoryEntity {
 
 
     // GETTERS AND SETTERS
-
 
     public UUID getCategoryId() {
         return categoryId;

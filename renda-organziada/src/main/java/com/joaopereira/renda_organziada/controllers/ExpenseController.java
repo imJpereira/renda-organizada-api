@@ -36,8 +36,10 @@ public class ExpenseController {
         //Fazer quando autenticação estiver pronta
         newExpense.setUser(userService.findAll().get(0));
 
-        var category = categoryService.findByCategoryId(expenseDTO.getCategory());
-        if (category != null) newExpense.setCategory(category);
+        if (expenseDTO.getCategory() != null) {
+            var category = categoryService.findByCategoryId(expenseDTO.getCategory());
+            newExpense.setCategory(category);
+        }
 
         expenseService.save(newExpense);
 
@@ -45,8 +47,9 @@ public class ExpenseController {
     }
 
     @GetMapping("/all")
-    public List<ExpenseEntity> findAll() throws Exception {
-        return expenseService.findAllSortedByDate();
+    public ResponseEntity<List<ExpenseEntity>> findAll() throws Exception {
+        var expenses = expenseService.findAllSortedByDate();
+        return ResponseEntity.ok(expenses);
     }
 
     @DeleteMapping("/delete/{id}")

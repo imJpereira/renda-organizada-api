@@ -1,6 +1,9 @@
 package com.joaopereira.renda_organziada.services;
 
+import com.joaopereira.renda_organziada.entities.CategoryEntity;
+import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
+import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +14,11 @@ import java.util.UUID;
 @Service
 public class PlanService {
     final private PlanRepository planRepository;
+    final private ExpenseRepository expenseRepository;
 
-    public PlanService(PlanRepository planRepository) {
+    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository) {
         this.planRepository = planRepository;
+        this.expenseRepository = expenseRepository;
     }
 
     public PlanEntity save(PlanEntity planEntity) throws Exception {
@@ -45,9 +50,19 @@ public class PlanService {
     }
 
     public void deleteById(UUID plan_id) throws Exception {
-        if (!planRepository.existsById(plan_id)) {
-            throw new IllegalArgumentException("O Plano com id \""+plan_id+"\" não existe");
-        }
+
+        PlanEntity plan = planRepository.findById(plan_id)
+                .orElseThrow(() -> new IllegalArgumentException("O Plano com id \""+plan_id+"\" não existe")
+        );
+
+        plan.getCategories().forEach(categoryEntity -> {
+
+            List<ExpenseEntity> expenses = expenseRepository.findByCategory_CategoryId(categoryEntity.getCategoryId());
+
+            expenses.forEach(expense -> expense.setCategory(null));
+
+            expenseRepository.saveAll(expenses);
+        });
 
         planRepository.deleteById(plan_id);
     }
