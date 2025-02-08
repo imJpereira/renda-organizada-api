@@ -1,21 +1,20 @@
 package com.joaopereira.renda_organziada.services;
 
+import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
+import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
 
 @Service
 public class ExpenseService {
-    private ExpenseRepository expenseRepository;
+    final private ExpenseRepository expenseRepository;
+
 
     public ExpenseService(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
@@ -48,12 +47,17 @@ public class ExpenseService {
         return expenseRepository.findByCategory_CategoryId(category_id);
     }
 
-    public void delete(UUID expense_id) throws Exception {
-        if (!expenseRepository.existsById(expense_id)) {
-            throw new IllegalArgumentException("A Despesa com id \""+expense_id+"\" não existe");
+    public ExpenseEntity findById(UUID id) throws Exception {
+        return expenseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("A Despesa com id \""+id+"\" não existe"));
+    }
+
+    public void delete(UUID id) throws Exception {
+        if (!expenseRepository.existsById(id)) {
+            throw new IllegalArgumentException("A Despesa com id \""+id+"\" não existe");
         }
 
-        expenseRepository.deleteById(expense_id);
+        expenseRepository.deleteById(id);
     }
 
 }

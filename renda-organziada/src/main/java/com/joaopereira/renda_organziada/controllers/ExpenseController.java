@@ -1,6 +1,7 @@
 package com.joaopereira.renda_organziada.controllers;
 
 import com.joaopereira.renda_organziada.dtos.ExpenseDTO;
+import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.services.CategoryService;
 import com.joaopereira.renda_organziada.services.ExpenseService;
@@ -37,8 +38,10 @@ public class ExpenseController {
         newExpense.setUser(userService.findAll().get(0));
 
         if (expenseDTO.getCategory() != null) {
-            var category = categoryService.findByCategoryId(expenseDTO.getCategory());
+            CategoryEntity category = categoryService.findByCategoryId(expenseDTO.getCategory());
             newExpense.setCategory(category);
+
+            category.setActualValue(category.getActualValue().add(newExpense.getValue()));
         }
 
         expenseService.save(newExpense);
@@ -54,8 +57,14 @@ public class ExpenseController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) throws Exception {
-        expenseService.delete(id);
 
+        ExpenseEntity expense = expenseService.findById(id);
+        if (expense.getCategory() != null) {
+            CategoryEntity category = categoryService.findByCategoryId(expense.getCategory().getCategoryId());
+            category.setActualValue(category.getActualValue().subtract(expense.getValue()));
+        }
+
+        expenseService.delete(id);
         return ResponseEntity.ok("Deletado com sucesso");
     }
 

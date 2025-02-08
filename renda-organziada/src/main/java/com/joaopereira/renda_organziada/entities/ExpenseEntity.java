@@ -30,6 +30,7 @@ public class ExpenseEntity {
     private CategoryEntity category;
 
     @Column(columnDefinition = "DECIMAL(15,2)", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##0.00")
     private BigDecimal value;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

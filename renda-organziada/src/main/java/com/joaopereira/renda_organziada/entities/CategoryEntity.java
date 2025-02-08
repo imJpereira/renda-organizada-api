@@ -1,5 +1,6 @@
 package com.joaopereira.renda_organziada.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
@@ -31,9 +32,11 @@ public class CategoryEntity {
     private String description;
 
     @Column(columnDefinition = "DECIMAL(15,2)")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##0.00")
     private BigDecimal targetValue;
 
     @Column(columnDefinition = "DECIMAL(15,2)")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##0.00")
     private BigDecimal actualValue;
 
 

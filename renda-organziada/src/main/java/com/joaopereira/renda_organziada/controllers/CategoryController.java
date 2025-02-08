@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.beans.Beans;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +28,14 @@ public class CategoryController {
 
     @GetMapping("/plan/{plan_id}")
     public ResponseEntity<List<CategoryEntity>> findCategories(@PathVariable UUID plan_id) throws Exception {
-        var categories = categoryService.findCategories(plan_id);
+        List<CategoryEntity> categories = categoryService.findCategories(plan_id);
+
+        categories.forEach(categoryEntity -> {
+            BigDecimal actualValue = categoryEntity.getActualValue();
+            NumberFormat.getCurrencyInstance().format(actualValue);
+
+        });
+
         return ResponseEntity.ok(categories);
     }
 
