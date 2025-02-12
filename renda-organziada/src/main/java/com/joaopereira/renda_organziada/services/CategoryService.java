@@ -1,5 +1,6 @@
 package com.joaopereira.renda_organziada.services;
 
+import com.joaopereira.renda_organziada.dtos.CategorySumDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.repositories.CategoryRepository;
@@ -7,6 +8,7 @@ import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,6 +42,25 @@ public class CategoryService {
         expenseRepository.saveAll(expenses);
 
         categoryRepository.deleteById(categoryId);
+    }
+
+    public CategorySumDTO sumCategoryValues(UUID plan_id) throws Exception {
+        List<CategoryEntity> categories = categoryRepository.findByPlan_PlanId(plan_id);
+
+        BigDecimal totalActualValue = BigDecimal.ZERO;
+        BigDecimal totalTargetValue = BigDecimal.ZERO;
+
+        for (CategoryEntity categoryEntity : categories) {
+            totalActualValue = totalActualValue.add(categoryEntity.getActualValue());
+            totalTargetValue = totalTargetValue.add(categoryEntity.getTargetValue());
+        }
+
+        CategorySumDTO categorySumDTO = new CategorySumDTO();
+        categorySumDTO.setActualValueSum(totalActualValue);
+        categorySumDTO.setTagetValueSum(totalTargetValue);
+        categorySumDTO.setBalance(totalTargetValue.subtract(totalActualValue));
+
+        return categorySumDTO;
     }
 
 }

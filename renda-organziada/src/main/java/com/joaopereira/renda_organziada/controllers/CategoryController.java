@@ -1,6 +1,7 @@
 package com.joaopereira.renda_organziada.controllers;
 
 import com.joaopereira.renda_organziada.dtos.CategoryDTO;
+import com.joaopereira.renda_organziada.dtos.CategorySumDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.services.CategoryService;
 import com.joaopereira.renda_organziada.services.PlanService;
@@ -59,6 +60,11 @@ public class CategoryController {
     public ResponseEntity<String> delete(@PathVariable UUID category_id) throws Exception {
         categoryService.delete(category_id);
         return ResponseEntity.ok("Deletado com sucesso");
+    }
+
+    @GetMapping("/{plan_id}/totals")
+    public CategorySumDTO sumCategoryValues(@PathVariable UUID plan_id) throws Exception {
+        return categoryService.sumCategoryValues(plan_id);
     }
 
     @ExceptionHandler
