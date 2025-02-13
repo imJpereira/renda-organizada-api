@@ -1,10 +1,12 @@
 package com.joaopereira.renda_organziada.services;
 
+import com.joaopereira.renda_organziada.dtos.PlanDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -65,5 +67,28 @@ public class PlanService {
         });
 
         planRepository.deleteById(plan_id);
+    }
+
+    public PlanEntity updatePlan(UUID planId, PlanDTO planDTO) throws Exception {
+
+        var updatedPlan = findById(planId);
+
+        if (planDTO.getTitle() != null) {
+            updatedPlan.setTitle(planDTO.getTitle());
+        }
+
+        if (planDTO.getInitialCapital() != null) {
+            updatedPlan.setInitialCapital(planDTO.getInitialCapital());
+        }
+
+        if (planDTO.getStartDate() != null) {
+            updatedPlan.setStartDate(planDTO.getStartDate());
+        }
+
+        if (planDTO.getFinalDate() != null) {
+            updatedPlan.setFinalDate(planDTO.getFinalDate());
+        }
+
+        return save(updatedPlan);
     }
 }

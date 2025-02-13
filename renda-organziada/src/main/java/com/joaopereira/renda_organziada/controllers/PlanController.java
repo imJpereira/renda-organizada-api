@@ -1,9 +1,11 @@
 package com.joaopereira.renda_organziada.controllers;
 
 import com.joaopereira.renda_organziada.dtos.PlanDTO;
+import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.services.PlanService;
 import com.joaopereira.renda_organziada.services.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +54,12 @@ public class PlanController {
     public ResponseEntity<String> deleteById(@PathVariable UUID plan_id) throws Exception {
         planService.deleteById(plan_id);
         return ResponseEntity.ok("Deletado com sucesso!");
+    }
+
+    @PatchMapping("/{plan_id}/update")
+    public ResponseEntity<PlanEntity> updatePlan(@PathVariable UUID plan_id, @RequestBody PlanDTO planDTO) throws Exception {
+        var updatedPlan = planService.updatePlan(plan_id, planDTO);
+        return ResponseEntity.ok(updatedPlan);
     }
 
     @ExceptionHandler

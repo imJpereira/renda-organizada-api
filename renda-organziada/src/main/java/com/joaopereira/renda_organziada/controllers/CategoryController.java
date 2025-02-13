@@ -72,5 +72,4 @@ public class CategoryController {
         String msg = ex.getMessage().replaceAll("\r\n", "");
         return ResponseEntity.badRequest().body(msg);
     }
-
 }
