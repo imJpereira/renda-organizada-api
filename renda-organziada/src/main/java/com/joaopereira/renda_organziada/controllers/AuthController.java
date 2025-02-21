@@ -23,7 +23,6 @@ public class AuthController {
     public ResponseEntity<UserEntity> create(@RequestBody SignUpDTO signup) throws Exception {
 
         UserEntity newUser = new UserEntity();
-
         BeanUtils.copyProperties(signup, newUser);
 
         userService.save(newUser);

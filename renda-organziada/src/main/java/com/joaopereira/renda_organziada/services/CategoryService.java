@@ -57,7 +57,7 @@ public class CategoryService {
 
         CategorySumDTO categorySumDTO = new CategorySumDTO();
         categorySumDTO.setActualValueSum(totalActualValue);
-        categorySumDTO.setTagetValueSum(totalTargetValue);
+        categorySumDTO.setTargetValueSum(totalTargetValue);
         categorySumDTO.setBalance(totalTargetValue.subtract(totalActualValue));
 
         return categorySumDTO;

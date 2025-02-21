@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class CategorySumDTO {
     private BigDecimal actualValueSum;
-    private BigDecimal tagetValueSum;
+    private BigDecimal targetValueSum;
     private BigDecimal balance;
 
     public BigDecimal getActualValueSum() {
@@ -15,12 +15,12 @@ public class CategorySumDTO {
         this.actualValueSum = actualValueSum;
     }
 
-    public BigDecimal getTagetValueSum() {
-        return tagetValueSum;
+    public BigDecimal getTargetValueSum() {
+        return targetValueSum;
     }
 
-    public void setTagetValueSum(BigDecimal tagetValueSum) {
-        this.tagetValueSum = tagetValueSum;
+    public void setTargetValueSum(BigDecimal targetValueSum) {
+        this.targetValueSum = targetValueSum;
     }
 
 public BigDecimal getBalance() {

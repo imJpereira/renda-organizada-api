@@ -2,31 +2,37 @@ package com.joaopereira.renda_organziada.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "user_tb")
-public class UserEntity {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PlanEntity> plans = new ArrayList<>();
 
-    private String cpf;
-    private String name;
-    private String email;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
+    private List<ExpenseEntity> expenses = new ArrayList<>();
 
+    @Column(nullable = false,unique = true)
+    private String cpf;
+    @Column(nullable = false, unique = true)
+    private String username;
+    @Column(nullable = false, unique = true)
+    private String email;
     @JsonIgnore
     private String password;
-
 
     // GETTERS AND SETTERS
 
@@ -54,12 +60,8 @@ public class UserEntity {
         this.cpf = cpf;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -70,8 +72,40 @@ public class UserEntity {
         this.email = email;
     }
 
+    //Security
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
     public String getPassword() {
-        return password;
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
