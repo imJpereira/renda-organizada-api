@@ -25,14 +25,22 @@ public class UserEntity implements UserDetails {
     @JsonIgnore
     private List<ExpenseEntity> expenses = new ArrayList<>();
 
-    @Column(nullable = false,unique = true)
-    private String cpf;
     @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false, unique = true)
     private String email;
     @JsonIgnore
     private String password;
+
+    public UserEntity(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public UserEntity() {
+
+    }
 
     // GETTERS AND SETTERS
 
@@ -50,14 +58,6 @@ public class UserEntity implements UserDetails {
 
     public void setPlans(List<PlanEntity> plans) {
         this.plans = plans;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
     }
 
     public void setUsername(String username) {

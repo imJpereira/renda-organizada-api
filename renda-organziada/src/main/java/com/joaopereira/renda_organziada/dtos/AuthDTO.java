@@ -1,6 +1,6 @@
 package com.joaopereira.renda_organziada.dtos;
 
-public class SignUpDTO {
+public class AuthDTO {
     private String cpf;
     private String username;
     private String email;

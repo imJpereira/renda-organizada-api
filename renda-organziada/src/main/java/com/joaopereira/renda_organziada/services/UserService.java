@@ -2,6 +2,7 @@ package com.joaopereira.renda_organziada.services;
 
 import com.joaopereira.renda_organziada.entities.UserEntity;
 import com.joaopereira.renda_organziada.repositories.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.joaopereira.renda_organziada.configs.security.WebSecurityConfig;
@@ -30,5 +31,11 @@ public class UserService {
     public List<UserEntity> findAll() throws Exception {
         return repository.findAll();
     }
+
+    public UserDetails findByUsername(String username) throws Exception {
+        return repository.findByUsername(username);
+    }
+
+
 
 }
