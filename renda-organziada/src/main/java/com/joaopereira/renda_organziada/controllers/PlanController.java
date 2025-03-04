@@ -34,7 +34,7 @@ public class PlanController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> create(@RequestBody PlanDTO planDTO) throws Exception {
+    public ResponseEntity<PlanEntity> create(@RequestBody PlanDTO planDTO) throws Exception {
         var newPlan = new PlanEntity();
         BeanUtils.copyProperties(planDTO, newPlan);
 
@@ -45,8 +45,8 @@ public class PlanController {
         newPlan.setUser(userEntity);
         newPlan.setTotalSpent(BigDecimal.ZERO);
 
-        planService.save(newPlan);
-        return ResponseEntity.ok("Plano criado com sucesso!");
+        var plan = planService.save(newPlan);
+        return ResponseEntity.ok(plan);
     }
 
     @GetMapping("/all")
@@ -65,9 +65,9 @@ public class PlanController {
     }
 
     @DeleteMapping("/delete/{plan_id}")
-    public ResponseEntity<String> deleteById(@PathVariable UUID plan_id) throws Exception {
+    public ResponseEntity<Void> deleteById(@PathVariable UUID plan_id) throws Exception {
         planService.deleteById(plan_id);
-        return ResponseEntity.ok("Deletado com sucesso!");
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/update/{plan_id}")
