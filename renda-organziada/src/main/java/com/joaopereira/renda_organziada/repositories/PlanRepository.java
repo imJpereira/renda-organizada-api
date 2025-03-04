@@ -13,4 +13,5 @@ import java.util.UUID;
 public interface PlanRepository extends JpaRepository<PlanEntity, UUID> {
 
     List<PlanEntity> findByUser(UserEntity user);
+    
 }

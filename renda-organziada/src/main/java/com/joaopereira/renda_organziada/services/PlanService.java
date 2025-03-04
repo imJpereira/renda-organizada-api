@@ -10,10 +10,13 @@ import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
 import org.apache.catalina.User;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -76,24 +79,24 @@ public class PlanService {
 
     public PlanEntity updatePlan(UUID planId, PlanDTO planDTO) throws Exception {
 
-        var updatedPlan = findById(planId);
+        var plan = findById(planId);
 
         if (planDTO.getTitle() != null) {
-            updatedPlan.setTitle(planDTO.getTitle());
+            plan.setTitle(planDTO.getTitle());
         }
 
         if (planDTO.getInitialCapital() != null) {
-            updatedPlan.setInitialCapital(planDTO.getInitialCapital());
+            plan.setInitialCapital(planDTO.getInitialCapital());
         }
 
         if (planDTO.getStartDate() != null) {
-            updatedPlan.setStartDate(planDTO.getStartDate());
+            plan.setStartDate(planDTO.getStartDate());
         }
 
         if (planDTO.getFinalDate() != null) {
-            updatedPlan.setFinalDate(planDTO.getFinalDate());
+            plan.setFinalDate(planDTO.getFinalDate());
         }
 
-        return save(updatedPlan);
+        return save(plan);
     }
 }

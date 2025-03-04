@@ -70,7 +70,7 @@ public class PlanController {
         return ResponseEntity.ok("Deletado com sucesso!");
     }
 
-    @PatchMapping("/{plan_id}/update")
+    @PatchMapping("/update/{plan_id}")
     public ResponseEntity<PlanEntity> updatePlan(@PathVariable UUID plan_id, @RequestBody PlanDTO planDTO) throws Exception {
         var updatedPlan = planService.updatePlan(plan_id, planDTO);
         return ResponseEntity.ok(updatedPlan);
