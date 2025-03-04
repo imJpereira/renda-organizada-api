@@ -3,6 +3,7 @@ package com.joaopereira.renda_organziada.controllers;
 import com.joaopereira.renda_organziada.dtos.CategoryDTO;
 import com.joaopereira.renda_organziada.dtos.CategorySumDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
+import com.joaopereira.renda_organziada.enums.CategoryType;
 import com.joaopereira.renda_organziada.services.CategoryService;
 import com.joaopereira.renda_organziada.services.PlanService;
 import org.springframework.beans.BeanUtils;
@@ -41,7 +42,7 @@ public class CategoryController {
     }
 
     @PostMapping("create/plan/{plan_id}")
-    public ResponseEntity<String> createCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable UUID plan_id) throws Exception {
+    public ResponseEntity<CategoryEntity> createCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable UUID plan_id) throws Exception {
 
         CategoryEntity newCategory = new CategoryEntity();
         BeanUtils.copyProperties(categoryDTO, newCategory);
@@ -50,16 +51,17 @@ public class CategoryController {
         newCategory.setPlan(plan);
 
         newCategory.setActualValue(BigDecimal.ZERO);
+        newCategory.setType(CategoryType.SIMPLE);
 
         categoryService.save(newCategory);
 
-        return ResponseEntity.ok("Criado com sucesso");
+        return ResponseEntity.ok(newCategory);
     }
 
     @DeleteMapping("/delete/{category_id}")
-    public ResponseEntity<String> delete(@PathVariable UUID category_id) throws Exception {
+    public ResponseEntity<Void> delete(@PathVariable UUID category_id) throws Exception {
         categoryService.delete(category_id);
-        return ResponseEntity.ok("Deletado com sucesso");
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/update/{category_id}")

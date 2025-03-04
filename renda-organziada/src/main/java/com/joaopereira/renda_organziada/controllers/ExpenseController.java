@@ -42,12 +42,13 @@ public class ExpenseController {
 
         newExpense.setUser(userEntity);
 
-        if (expenseDTO.getCategory() != null) {
-            CategoryEntity category = categoryService.findByCategoryId(expenseDTO.getCategory());
-            newExpense.setCategory(category);
+        CategoryEntity category = (expenseDTO.getCategory() != null) ?
+                categoryService.findByCategoryId(expenseDTO.getCategory()) :
+                categoryService.findByBaseCategory();
 
-            category.setActualValue(category.getActualValue().add(newExpense.getValue()));
-        }
+        newExpense.setCategory(category);
+        category.setActualValue(category.getActualValue().add(newExpense.getValue()));
+        categoryService.save(category);
 
         expenseService.save(newExpense);
 

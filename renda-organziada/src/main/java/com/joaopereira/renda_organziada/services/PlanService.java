@@ -1,11 +1,14 @@
 package com.joaopereira.renda_organziada.services;
 
 import com.joaopereira.renda_organziada.configs.security.TokenService;
+import com.joaopereira.renda_organziada.dtos.CategorySumDTO;
 import com.joaopereira.renda_organziada.dtos.PlanDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.entities.UserEntity;
+import com.joaopereira.renda_organziada.enums.CategoryType;
+import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
 import org.apache.catalina.User;
@@ -23,12 +26,12 @@ import java.util.UUID;
 public class PlanService {
     final private PlanRepository planRepository;
     final private ExpenseRepository expenseRepository;
-    private final TokenService tokenService;
+    private final CategoryService categoryService;
 
-    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository, TokenService tokenService) {
+    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository, CategoryService categoryService) {
         this.planRepository = planRepository;
         this.expenseRepository = expenseRepository;
-        this.tokenService = tokenService;
+        this.categoryService = categoryService;
     }
 
     public PlanEntity save(PlanEntity planEntity) throws Exception {
@@ -47,6 +50,7 @@ public class PlanService {
         }
 
         planRepository.save(planEntity);
+        categoryService.createBaseCategory(planEntity);
 
         return planEntity;
     }

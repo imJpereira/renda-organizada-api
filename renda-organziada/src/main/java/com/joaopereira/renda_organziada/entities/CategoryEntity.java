@@ -2,6 +2,7 @@ package com.joaopereira.renda_organziada.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.joaopereira.renda_organziada.enums.CategoryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -38,6 +39,9 @@ public class CategoryEntity {
     @Column(columnDefinition = "DECIMAL(15,2)")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##0.00")
     private BigDecimal actualValue;
+
+    @Enumerated(EnumType.STRING)
+    private CategoryType type;
 
 
     // GETTERS AND SETTERS
@@ -88,5 +92,13 @@ public class CategoryEntity {
 
     public void setExpenses(List<ExpenseEntity> expenses) {
         this.expenses = expenses;
+    }
+
+    public CategoryType getType() {
+        return type;
+    }
+
+    public void setType(CategoryType type) {
+        this.type = type;
     }
 }
