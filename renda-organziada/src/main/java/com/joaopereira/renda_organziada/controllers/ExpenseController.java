@@ -3,6 +3,7 @@ package com.joaopereira.renda_organziada.controllers;
 import com.joaopereira.renda_organziada.dtos.ExpenseDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
+import com.joaopereira.renda_organziada.entities.UserEntity;
 import com.joaopereira.renda_organziada.services.CategoryService;
 import com.joaopereira.renda_organziada.services.ExpenseService;
 import com.joaopereira.renda_organziada.services.UserService;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,12 +33,14 @@ public class ExpenseController {
 
     @PostMapping("/create")
     public ResponseEntity<ExpenseEntity> create(@RequestBody ExpenseDTO expenseDTO) throws Exception {
-
         ExpenseEntity newExpense = new ExpenseEntity();
         BeanUtils.copyProperties(expenseDTO, newExpense);
 
-        //Fazer quando autenticação estiver pronta
-        newExpense.setUser(userService.findAll().get(0));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserEntity userEntity = userService.findByUsername(username);
+
+        newExpense.setUser(userEntity);
 
         if (expenseDTO.getCategory() != null) {
             CategoryEntity category = categoryService.findByCategoryId(expenseDTO.getCategory());
@@ -50,8 +55,12 @@ public class ExpenseController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ExpenseEntity>> findAll() throws Exception {
-        var expenses = expenseService.findAllSortedByDate();
+    public ResponseEntity<List<ExpenseEntity>> findAllByUser() throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserEntity userEntity = userService.findByUsername(username);
+
+        var expenses = expenseService.findAllByUser(userEntity);
         return ResponseEntity.ok(expenses);
     }
 

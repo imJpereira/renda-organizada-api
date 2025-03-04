@@ -2,6 +2,7 @@ package com.joaopereira.renda_organziada.services;
 
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
+import com.joaopereira.renda_organziada.entities.UserEntity;
 import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import org.springframework.stereotype.Service;
@@ -39,8 +40,8 @@ public class ExpenseService {
         return expense;
     }
 
-    public List<ExpenseEntity> findAllSortedByDate() throws Exception {
-        return expenseRepository.findAllSortedByDateDesc();
+    public List<ExpenseEntity> findAllByUser(UserEntity user) throws Exception {
+        return expenseRepository.findByUser(user);
     }
 
     public List<ExpenseEntity> findByCategory(UUID category_id) throws Exception {

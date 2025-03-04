@@ -3,11 +3,18 @@ package com.joaopereira.renda_organziada.controllers;
 import com.joaopereira.renda_organziada.dtos.PlanDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
+import com.joaopereira.renda_organziada.entities.UserEntity;
 import com.joaopereira.renda_organziada.services.PlanService;
 import com.joaopereira.renda_organziada.services.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -28,11 +35,14 @@ public class PlanController {
 
     @PostMapping("/create")
     public ResponseEntity<String> create(@RequestBody PlanDTO planDTO) throws Exception {
-
         var newPlan = new PlanEntity();
         BeanUtils.copyProperties(planDTO, newPlan);
 
-        newPlan.setUser(userService.findAll().get(0));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserEntity userEntity = userService.findByUsername(username);
+
+        newPlan.setUser(userEntity);
         newPlan.setTotalSpent(BigDecimal.ZERO);
 
         planService.save(newPlan);
@@ -40,8 +50,12 @@ public class PlanController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PlanEntity>> findAll() throws Exception {
-        var plans = planService.findAllSortedByDate();
+    public ResponseEntity<List<PlanEntity>> findAllByUser() throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserEntity userEntity = userService.findByUsername(username);
+
+        var plans = planService.findByAllUser(userEntity);
         return ResponseEntity.ok(plans);
     }
 

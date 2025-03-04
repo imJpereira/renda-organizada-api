@@ -1,11 +1,14 @@
 package com.joaopereira.renda_organziada.services;
 
+import com.joaopereira.renda_organziada.configs.security.TokenService;
 import com.joaopereira.renda_organziada.dtos.PlanDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
+import com.joaopereira.renda_organziada.entities.UserEntity;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +20,12 @@ import java.util.UUID;
 public class PlanService {
     final private PlanRepository planRepository;
     final private ExpenseRepository expenseRepository;
+    private final TokenService tokenService;
 
-    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository) {
+    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository, TokenService tokenService) {
         this.planRepository = planRepository;
         this.expenseRepository = expenseRepository;
+        this.tokenService = tokenService;
     }
 
     public PlanEntity save(PlanEntity planEntity) throws Exception {
@@ -43,8 +48,8 @@ public class PlanService {
         return planEntity;
     }
 
-    public List<PlanEntity> findAllSortedByDate() throws Exception {
-        return planRepository.findAllSortedByDateDesc();
+    public List<PlanEntity> findByAllUser(UserEntity userEntity) throws Exception {
+        return planRepository.findByUser(userEntity);
     }
 
     public PlanEntity findById(UUID id) throws Exception {

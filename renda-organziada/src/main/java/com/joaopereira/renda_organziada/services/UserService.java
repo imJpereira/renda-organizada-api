@@ -32,7 +32,7 @@ public class UserService {
         return repository.findAll();
     }
 
-    public UserDetails findByUsername(String username) throws Exception {
+    public UserEntity findByUsername(String username) throws Exception {
         return repository.findByUsername(username);
     }
 
