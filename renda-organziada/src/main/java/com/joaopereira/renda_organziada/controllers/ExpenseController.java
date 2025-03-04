@@ -83,6 +83,12 @@ public class ExpenseController {
         return ResponseEntity.ok(expenseService.findByCategory(category_id));
     }
 
+    @PatchMapping("/update/{expense_id}")
+    public ResponseEntity<ExpenseEntity> updateExpense(@PathVariable UUID expense_id, @RequestBody ExpenseDTO expenseDTO) throws Exception {
+        var expense = expenseService.updateExpenses(expense_id, expenseDTO);
+        return ResponseEntity.ok(expense);
+    }
+
     @ExceptionHandler
     public ResponseEntity<String> handlerMethod(Exception ex) {
         String msg = ex.getMessage().replaceAll("\r\n", "");

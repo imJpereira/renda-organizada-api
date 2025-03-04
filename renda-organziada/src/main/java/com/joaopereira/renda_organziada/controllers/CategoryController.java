@@ -62,6 +62,12 @@ public class CategoryController {
         return ResponseEntity.ok("Deletado com sucesso");
     }
 
+    @PatchMapping("/update/{category_id}")
+    public ResponseEntity<CategoryEntity> updateCategory(@PathVariable UUID category_id,@RequestBody CategoryDTO categoryDTO) throws Exception {
+        var category = categoryService.updateCategory(category_id, categoryDTO);
+        return ResponseEntity.ok(category);
+    }
+
     @GetMapping("/{plan_id}/totals")
     public CategorySumDTO sumCategoryValues(@PathVariable UUID plan_id) throws Exception {
         return categoryService.sumCategoryValues(plan_id);

@@ -1,5 +1,6 @@
 package com.joaopereira.renda_organziada.services;
 
+import com.joaopereira.renda_organziada.dtos.CategoryDTO;
 import com.joaopereira.renda_organziada.dtos.CategorySumDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
@@ -43,6 +44,17 @@ public class CategoryService {
 
         categoryRepository.deleteById(categoryId);
     }
+
+    public CategoryEntity updateCategory(UUID categoryId, CategoryDTO categoryDTO) throws Exception {
+        var category = this.findByCategoryId(categoryId);
+
+        if (categoryDTO.getDescription() != null) category.setDescription(categoryDTO.getDescription());
+
+        if (categoryDTO.getTargetValue() != null) category.setTargetValue(categoryDTO.getTargetValue());
+
+        return categoryRepository.save(category);
+    }
+
 
     public CategorySumDTO sumCategoryValues(UUID plan_id) throws Exception {
         List<CategoryEntity> categories = categoryRepository.findByPlan_PlanId(plan_id);
