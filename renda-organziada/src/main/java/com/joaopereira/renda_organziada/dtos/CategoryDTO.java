@@ -1,7 +1,5 @@
 package com.joaopereira.renda_organziada.dtos;
 
-import com.joaopereira.renda_organziada.entities.PlanEntity;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 

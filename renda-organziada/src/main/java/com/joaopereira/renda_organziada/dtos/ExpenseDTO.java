@@ -10,6 +10,7 @@ import lombok.*;
 
 public class ExpenseDTO {
 
+    private UUID plan;
     private UUID category;
     private BigDecimal value;
     private LocalDate expenseDate;
@@ -45,5 +46,13 @@ public class ExpenseDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public UUID getPlan() {
+        return plan;
+    }
+
+    public void setPlan(UUID plan) {
+        this.plan = plan;
     }
 }

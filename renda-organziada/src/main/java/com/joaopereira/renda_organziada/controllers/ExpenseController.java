@@ -3,9 +3,12 @@ package com.joaopereira.renda_organziada.controllers;
 import com.joaopereira.renda_organziada.dtos.ExpenseDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
+import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.entities.UserEntity;
+import com.joaopereira.renda_organziada.repositories.PlanRepository;
 import com.joaopereira.renda_organziada.services.CategoryService;
 import com.joaopereira.renda_organziada.services.ExpenseService;
+import com.joaopereira.renda_organziada.services.PlanService;
 import com.joaopereira.renda_organziada.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -24,11 +27,13 @@ public class ExpenseController {
     private final ExpenseService expenseService;
     private final UserService userService;
     private final CategoryService categoryService;
+    private final PlanService planService;
 
-    public ExpenseController(ExpenseService expenseService, UserService userService, CategoryService categoryService) {
+    public ExpenseController(ExpenseService expenseService, UserService userService, CategoryService categoryService, PlanRepository planRepository, PlanService planService) {
         this.expenseService = expenseService;
         this.userService = userService;
         this.categoryService = categoryService;
+        this.planService = planService;
     }
 
     @PostMapping("/create")
@@ -42,13 +47,14 @@ public class ExpenseController {
 
         newExpense.setUser(userEntity);
 
-        CategoryEntity category = (expenseDTO.getCategory() != null) ?
-                categoryService.findByCategoryId(expenseDTO.getCategory()) :
-                categoryService.findByBaseCategory();
-
+        CategoryEntity category;
+        if (expenseDTO.getCategory() != null) {
+            category = categoryService.findByCategoryId(expenseDTO.getCategory());
+        } else {
+            var plan = planService.findById(expenseDTO.getPlan());
+            category = categoryService.findBaseCategory(plan);
+        }
         newExpense.setCategory(category);
-        category.setActualValue(category.getActualValue().add(newExpense.getValue()));
-        categoryService.save(category);
 
         expenseService.save(newExpense);
 

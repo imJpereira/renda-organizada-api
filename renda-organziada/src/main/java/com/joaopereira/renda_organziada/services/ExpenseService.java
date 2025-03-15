@@ -4,6 +4,7 @@ import com.joaopereira.renda_organziada.dtos.ExpenseDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.UserEntity;
+import com.joaopereira.renda_organziada.enums.CategoryType;
 import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -39,6 +40,10 @@ public class ExpenseService {
             throw new IllegalArgumentException("Invalid Value: less or equal to zero");
         }
 
+        var category = expense.getCategory();
+        category.setActualValue(category.getActualValue().add(expense.getValue()));
+
+        categoryRepository.save(category);
         expenseRepository.save(expense);
 
         return expense;
