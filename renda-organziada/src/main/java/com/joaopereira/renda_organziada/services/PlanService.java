@@ -1,25 +1,15 @@
 package com.joaopereira.renda_organziada.services;
 
-import com.joaopereira.renda_organziada.configs.security.TokenService;
-import com.joaopereira.renda_organziada.dtos.CategorySumDTO;
 import com.joaopereira.renda_organziada.dtos.PlanDTO;
-import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.entities.UserEntity;
-import com.joaopereira.renda_organziada.enums.CategoryType;
-import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
-import org.apache.catalina.User;
-import org.springframework.beans.BeanUtils;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
