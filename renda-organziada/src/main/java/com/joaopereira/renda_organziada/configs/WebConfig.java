@@ -15,7 +15,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE","PATCH")
                 .allowedHeaders("*");
 
-        //Quando a aplicação tiver autenticação, pode ser que seja necessário adicionar mais configurações ao CORS
     }
 
 }

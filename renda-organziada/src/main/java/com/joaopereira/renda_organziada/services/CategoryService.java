@@ -7,6 +7,8 @@ import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.enums.CategoryType;
 import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
+
+import org.springframework.cache.support.AbstractValueAdaptingCache;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -69,6 +71,16 @@ public class CategoryService {
         if (categoryDTO.getTargetValue() != null) category.setTargetValue(categoryDTO.getTargetValue());
 
         return categoryRepository.save(category);
+    }
+    
+    public CategoryEntity updateBaseCategory(PlanEntity planEntity, BigDecimal newValue) throws Exception {
+    	
+    	var baseCategory = this.findBaseCategory(planEntity);
+    	var valueChanged = newValue.subtract(planEntity.getInitialCapital());
+    	
+    	baseCategory.setTargetValue(baseCategory.getTargetValue().add(valueChanged));
+
+    	return categoryRepository.save(baseCategory);
     }
 
     public void createBaseCategory(PlanEntity planEntity) {
