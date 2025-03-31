@@ -7,6 +7,7 @@ import com.joaopereira.renda_organziada.entities.UserEntity;
 import com.joaopereira.renda_organziada.enums.CategoryType;
 import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
+import com.joaopereira.renda_organziada.repositories.PlanRepository;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +20,13 @@ import java.util.UUID;
 public class ExpenseService {
     final private ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
+    private final PlanRepository planRepository;
 
 
-    public ExpenseService(ExpenseRepository expenseRepository, CategoryRepository categoryRepository) {
+    public ExpenseService(ExpenseRepository expenseRepository, CategoryRepository categoryRepository, PlanRepository planRepository) {
         this.expenseRepository = expenseRepository;
         this.categoryRepository = categoryRepository;
+        this.planRepository = planRepository;
     }
 
     public ExpenseEntity save(ExpenseEntity expense) throws Exception {
@@ -43,6 +46,10 @@ public class ExpenseService {
         var category = expense.getCategory();
         category.setActualValue(category.getActualValue().add(expense.getValue()));
 
+        var plan = expense.getCategory().getPlan();
+        plan.setTotalSpent(plan.getTotalSpent().add(expense.getValue()));
+
+        planRepository.save(plan);
         categoryRepository.save(category);
         expenseRepository.save(expense);
 

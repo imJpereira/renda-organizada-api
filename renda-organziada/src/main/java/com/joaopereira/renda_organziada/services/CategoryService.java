@@ -84,6 +84,8 @@ public class CategoryService {
     }
 
     public void createBaseCategory(PlanEntity planEntity) {
+        if (categoryRepository.existsByPlanAndType(planEntity, CategoryType.BASE)) return;
+
         CategoryEntity baseCategory = new CategoryEntity();
         baseCategory.setPlan(planEntity);
         baseCategory.setDescription("Geral");
