@@ -28,7 +28,7 @@ public class CategoryService {
     public CategoryEntity save(CategoryEntity category) throws Exception {
         if (category.getType().equals(CategoryType.BASE)) return categoryRepository.save(category);
 
-        CategoryEntity baseCategory = categoryRepository.findFirstByType(CategoryType.BASE);
+        CategoryEntity baseCategory = categoryRepository.findFirstByPlanAndType(category.getPlan(), CategoryType.BASE);
         baseCategory.setTargetValue(baseCategory.getTargetValue().subtract(category.getTargetValue()));
 
         if (baseCategory.getTargetValue().compareTo(BigDecimal.ZERO) > 0)
@@ -78,9 +78,9 @@ public class CategoryService {
         categoryRepository.save(baseCategory);
     }
 
-    public CategoryEntity findByBaseCategory() throws Exception {
-        return categoryRepository.findFirstByType(CategoryType.BASE);
-    }
+    public CategoryEntity findBaseCategory(PlanEntity plan) throws Exception {
+        return categoryRepository.findFirstByPlanAndType(plan, CategoryType.BASE);
+   }
 
     public CategorySumDTO sumCategoryValues(UUID plan_id) throws Exception {
         List<CategoryEntity> categories = categoryRepository.findByPlan_PlanId(plan_id);
