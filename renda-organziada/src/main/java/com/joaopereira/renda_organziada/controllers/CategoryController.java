@@ -1,17 +1,14 @@
 package com.joaopereira.renda_organziada.controllers;
 
 import com.joaopereira.renda_organziada.dtos.CategoryDTO;
-import com.joaopereira.renda_organziada.dtos.CategorySumDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.enums.CategoryType;
 import com.joaopereira.renda_organziada.services.CategoryService;
 import com.joaopereira.renda_organziada.services.PlanService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.support.BeanDefinitionDsl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.beans.Beans;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
@@ -68,11 +65,6 @@ public class CategoryController {
     public ResponseEntity<CategoryEntity> updateCategory(@PathVariable UUID category_id,@RequestBody CategoryDTO categoryDTO) throws Exception {
         var category = categoryService.updateCategory(category_id, categoryDTO);
         return ResponseEntity.ok(category);
-    }
-
-    @GetMapping("/{plan_id}/totals")
-    public CategorySumDTO sumCategoryValues(@PathVariable UUID plan_id) throws Exception {
-        return categoryService.sumCategoryValues(plan_id);
     }
 
     @ExceptionHandler

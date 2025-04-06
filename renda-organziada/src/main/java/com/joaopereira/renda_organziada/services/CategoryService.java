@@ -1,7 +1,6 @@
 package com.joaopereira.renda_organziada.services;
 
 import com.joaopereira.renda_organziada.dtos.CategoryDTO;
-import com.joaopereira.renda_organziada.dtos.CategorySumDTO;
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
@@ -28,7 +27,7 @@ public class CategoryService {
     public CategoryEntity save(CategoryEntity category) throws Exception {
         if (category.getType().equals(CategoryType.BASE)) return categoryRepository.save(category);
 
-        CategoryEntity baseCategory = categoryRepository.findFirstByPlanAndType(category.getPlan(), CategoryType.BASE);
+        CategoryEntity baseCategory = categoryRepository.findFirstByPlanAndType(category.getPlan(),CategoryType.BASE);
         baseCategory.setTargetValue(baseCategory.getTargetValue().subtract(category.getTargetValue()));
 
         if (baseCategory.getTargetValue().compareTo(BigDecimal.ZERO) > 0)
@@ -82,23 +81,15 @@ public class CategoryService {
         return categoryRepository.findFirstByPlanAndType(plan, CategoryType.BASE);
    }
 
-    public CategorySumDTO sumCategoryValues(UUID plan_id) throws Exception {
-        List<CategoryEntity> categories = categoryRepository.findByPlan_PlanId(plan_id);
+    public void updateBaseCategory(PlanEntity planEntity, BigDecimal newValue) throws Exception {
 
-        BigDecimal totalActualValue = BigDecimal.ZERO;
-        BigDecimal totalTargetValue = BigDecimal.ZERO;
+        var baseCategory = this.findBaseCategory(planEntity);
+        var valueChanged = newValue.subtract(planEntity.getInitialCapital());
 
-        for (CategoryEntity categoryEntity : categories) {
-            totalActualValue = totalActualValue.add(categoryEntity.getActualValue());
-            totalTargetValue = totalTargetValue.add(categoryEntity.getTargetValue());
-        }
+        baseCategory.setTargetValue(baseCategory.getTargetValue().add(valueChanged));
 
-        CategorySumDTO categorySumDTO = new CategorySumDTO();
-        categorySumDTO.setActualValueSum(totalActualValue);
-        categorySumDTO.setTargetValueSum(totalTargetValue);
-        categorySumDTO.setBalance(totalTargetValue.subtract(totalActualValue));
-
-        return categorySumDTO;
+        categoryRepository.save(baseCategory);
     }
+
 
 }

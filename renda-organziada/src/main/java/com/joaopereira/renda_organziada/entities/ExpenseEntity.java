@@ -15,7 +15,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "expenses_tb")
 public class ExpenseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID expenseId;
@@ -41,7 +40,6 @@ public class ExpenseEntity {
 
     //GETTERS AND SETTERS
 
-
     public UUID getExpenseId() {
         return expenseId;
     }
@@ -50,19 +48,19 @@ public class ExpenseEntity {
         this.expenseId = expenseId;
     }
 
-    public UserEntity getUser() {
+    public com.joaopereira.renda_organziada.entities.UserEntity getUser() {
         return user;
     }
 
-    public void setUser(UserEntity user) {
+    public void setUser(com.joaopereira.renda_organziada.entities.UserEntity user) {
         this.user = user;
     }
 
-    public CategoryEntity getCategory() {
+    public com.joaopereira.renda_organziada.entities.CategoryEntity getCategory() {
         return category;
     }
 
-    public void setCategory(CategoryEntity category) {
+    public void setCategory(com.joaopereira.renda_organziada.entities.CategoryEntity category) {
         this.category = category;
     }
 

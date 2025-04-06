@@ -16,14 +16,6 @@ public class ExpenseDTO {
     private LocalDate expenseDate;
     private String description;
 
-    public UUID getPlan() {
-        return plan;
-    }
-
-    public void setPlan(UUID plan) {
-        this.plan = plan;
-    }
-
     public UUID getCategory() {
         return category;
     }
@@ -54,5 +46,13 @@ public class ExpenseDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public UUID getPlan() {
+        return plan;
+    }
+
+    public void setPlan(UUID plan) {
+        this.plan = plan;
     }
 }

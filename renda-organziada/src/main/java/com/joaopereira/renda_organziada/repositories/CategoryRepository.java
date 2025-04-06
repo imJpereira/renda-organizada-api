@@ -16,4 +16,6 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, UUID> 
     List<CategoryEntity> findByPlan_PlanId(UUID planPlanId);
 
     CategoryEntity findFirstByPlanAndType(PlanEntity plan, CategoryType type);
+
+    Boolean existsByPlanAndType(PlanEntity plan, CategoryType type);
 }

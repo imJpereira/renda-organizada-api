@@ -1,8 +1,5 @@
 package com.joaopereira.renda_organziada.dtos;
 
-import com.joaopereira.renda_organziada.entities.UserEntity;
-import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
