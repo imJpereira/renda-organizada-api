@@ -4,7 +4,6 @@ import com.joaopereira.renda_organziada.dtos.PlanDTO;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.entities.UserEntity;
-import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
 import org.springframework.stereotype.Service;
@@ -17,13 +16,13 @@ import java.util.UUID;
 public class PlanService {
     final private PlanRepository planRepository;
     final private ExpenseRepository expenseRepository;
-    final private CategoryService categoryService;
+    final private BaseCategoryService baseCategoryService;
     
     
-    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository, CategoryService categoryService) {
+    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository, BaseCategoryService categoryService) {
         this.planRepository = planRepository;
         this.expenseRepository = expenseRepository;
-        this.categoryService = categoryService;
+        this.baseCategoryService = categoryService;
      
     }
 
@@ -43,12 +42,12 @@ public class PlanService {
         }
 
         planRepository.save(planEntity);
-        categoryService.createBaseCategory(planEntity);
+        if (!baseCategoryService.existsBaseCategory(planEntity)) baseCategoryService.createBaseCategory(planEntity);
 
         return planEntity;
     }
 
-    public List<PlanEntity> findByAllUser(UserEntity userEntity) throws Exception {
+    public List<PlanEntity> findAllByUser(UserEntity userEntity) throws Exception {
         return planRepository.findByUser(userEntity);
     }
 
@@ -83,10 +82,8 @@ public class PlanService {
         }
 
         if (planDTO.getInitialCapital() != null) {
-           categoryService.updateBaseCategory(plan, planDTO.getInitialCapital());        
-           
+           baseCategoryService.updateBaseCategory(plan, planDTO.getInitialCapital());
            plan.setInitialCapital(planDTO.getInitialCapital());
-        
         }
 
         if (planDTO.getStartDate() != null) {

@@ -5,10 +5,7 @@ import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.UserEntity;
 import com.joaopereira.renda_organziada.repositories.CategoryRepository;
-import com.joaopereira.renda_organziada.services.CategoryService;
-import com.joaopereira.renda_organziada.services.ExpenseService;
-import com.joaopereira.renda_organziada.services.PlanService;
-import com.joaopereira.renda_organziada.services.UserService;
+import com.joaopereira.renda_organziada.services.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
@@ -28,13 +25,15 @@ public class ExpenseController {
     private final CategoryService categoryService;
     private final PlanService planService;
     private final CategoryRepository categoryRepository;
+    private final BaseCategoryService baseCategoryService;
 
-    public ExpenseController(ExpenseService expenseService, UserService userService, CategoryService categoryService, PlanService planService, CategoryRepository categoryRepository) {
+    public ExpenseController(ExpenseService expenseService, UserService userService, CategoryService categoryService, PlanService planService, CategoryRepository categoryRepository, BaseCategoryService baseCategoryService) {
         this.expenseService = expenseService;
         this.userService = userService;
         this.categoryService = categoryService;
         this.planService = planService;
         this.categoryRepository = categoryRepository;
+        this.baseCategoryService = baseCategoryService;
     }
 
     @PostMapping("/create")
@@ -50,7 +49,7 @@ public class ExpenseController {
 
         var category = (expenseDTO.getCategory() != null)
                 ? categoryService.findByCategoryId(expenseDTO.getCategory())
-                : categoryService.findBaseCategory( planService.findById(expenseDTO.getPlan()));
+                : baseCategoryService.findBaseCategory( planService.findById(expenseDTO.getPlan()));
 
         newExpense.setCategory(category);
         category.setActualValue(category.getActualValue().add(newExpense.getValue()));

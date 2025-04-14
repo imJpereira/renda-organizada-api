@@ -55,7 +55,7 @@ public class PlanController {
         String username = authentication.getName();
         UserEntity userEntity = userService.findByUsername(username);
 
-        var plans = planService.findByAllUser(userEntity);
+        var plans = planService.findAllByUser(userEntity);
         return ResponseEntity.ok(plans);
     }
 

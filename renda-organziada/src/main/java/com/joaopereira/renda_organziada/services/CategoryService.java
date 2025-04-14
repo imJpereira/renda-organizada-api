@@ -8,6 +8,7 @@ import com.joaopereira.renda_organziada.enums.CategoryType;
 import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
+import com.joaopereira.renda_organziada.services.strategy.CategoryStrategyFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,24 +19,18 @@ import java.util.UUID;
 public class CategoryService {
     final private CategoryRepository categoryRepository;
     final private ExpenseRepository expenseRepository;
+    private final CategoryStrategyFactory categoryStrategyFactory;
 
-    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository, CategoryStrategyFactory categoryStrategyFactory) {
         this.categoryRepository = categoryRepository;
         this.expenseRepository = expenseRepository;
+        this.categoryStrategyFactory = categoryStrategyFactory;
     }
 
     public CategoryEntity save(CategoryEntity category) throws Exception {
-        if (category.getType().equals(CategoryType.BASE)) return categoryRepository.save(category);
-
-        CategoryEntity baseCategory = categoryRepository.findFirstByPlanAndType(category.getPlan(),CategoryType.BASE);
-        baseCategory.setTargetValue(baseCategory.getTargetValue().subtract(category.getTargetValue()));
-
-        if (baseCategory.getTargetValue().compareTo(BigDecimal.ZERO) > 0)
-            categoryRepository.save(baseCategory);
-        else
-            categoryRepository.deleteById(baseCategory.getCategoryId());
-
-        return categoryRepository.save(category);
+        return categoryStrategyFactory
+                .getCategoryStrategyMap(category.getType())
+                .save(category);
     }
 
     public List<CategoryEntity> findCategories(UUID planId) throws Exception {
@@ -64,31 +59,6 @@ public class CategoryService {
         if (categoryDTO.getTargetValue() != null) category.setTargetValue(categoryDTO.getTargetValue());
 
         return categoryRepository.save(category);
-    }
-
-    public void createBaseCategory(PlanEntity planEntity) {
-        CategoryEntity baseCategory = new CategoryEntity();
-        baseCategory.setPlan(planEntity);
-        baseCategory.setDescription("Geral");
-        baseCategory.setType(CategoryType.BASE);
-        baseCategory.setTargetValue(planEntity.getInitialCapital());
-        baseCategory.setActualValue(BigDecimal.ZERO);
-
-        categoryRepository.save(baseCategory);
-    }
-
-    public CategoryEntity findBaseCategory(PlanEntity plan) throws Exception {
-        return categoryRepository.findFirstByPlanAndType(plan, CategoryType.BASE);
-   }
-
-    public void updateBaseCategory(PlanEntity planEntity, BigDecimal newValue) throws Exception {
-
-        var baseCategory = this.findBaseCategory(planEntity);
-        var valueChanged = newValue.subtract(planEntity.getInitialCapital());
-
-        baseCategory.setTargetValue(baseCategory.getTargetValue().add(valueChanged));
-
-        categoryRepository.save(baseCategory);
     }
 
 
