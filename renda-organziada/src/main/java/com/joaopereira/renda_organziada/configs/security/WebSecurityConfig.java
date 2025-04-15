@@ -27,13 +27,12 @@ public class WebSecurityConfig {
 
     public WebSecurityConfig(SecurityFilter securityFilter) {
         this.securityFilter = securityFilter;
-
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults()) //configura o cors com base na corsConfigurationSource
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())  //desativa csrf
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //tipo de aplicação
                 .authorizeHttpRequests(auth -> auth
@@ -70,5 +69,4 @@ public class WebSecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }

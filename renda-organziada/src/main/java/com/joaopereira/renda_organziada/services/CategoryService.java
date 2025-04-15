@@ -7,8 +7,8 @@ import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.enums.CategoryType;
 import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
-
-import org.springframework.cache.support.AbstractValueAdaptingCache;
+import com.joaopereira.renda_organziada.repositories.PlanRepository;
+import com.joaopereira.renda_organziada.services.strategy.CategoryStrategyFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,23 +19,24 @@ import java.util.UUID;
 public class CategoryService {
     final private CategoryRepository categoryRepository;
     final private ExpenseRepository expenseRepository;
+    private final CategoryStrategyFactory categoryStrategyFactory;
+    private final BaseCategoryService baseCategoryService;
 
-    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository, CategoryStrategyFactory categoryStrategyFactory, BaseCategoryService baseCategoryService) {
         this.categoryRepository = categoryRepository;
         this.expenseRepository = expenseRepository;
+        this.categoryStrategyFactory = categoryStrategyFactory;
+        this.baseCategoryService = baseCategoryService;
     }
 
     public CategoryEntity save(CategoryEntity category) throws Exception {
-
-        var baseCategory = categoryRepository.findFirstByPlanAndType(category.getPlan(), CategoryType.BASE);
-        baseCategory.setTargetValue(baseCategory.getTargetValue().subtract(category.getTargetValue()));
-
-        if (baseCategory.getTargetValue().compareTo(BigDecimal.ZERO) > 0)
-            categoryRepository.save(baseCategory);
-        else
-            categoryRepository.deleteById(baseCategory.getCategoryId());
-
         return categoryRepository.save(category);
+    }
+
+    public CategoryEntity create(PlanEntity planEntity, CategoryEntity categoryEntity) throws Exception {
+        return categoryStrategyFactory
+                .getCategoryStrategyMap(categoryEntity.getType())
+                .create(planEntity, categoryEntity);
     }
 
     public List<CategoryEntity> findCategories(UUID planId) throws Exception {
@@ -46,21 +47,18 @@ public class CategoryService {
         return categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("Category not found"));
     }
 
-    public void delete(UUID categoryId) throws Exception {
-        CategoryEntity deletedCategory = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("category ID not found"));
-        List<ExpenseEntity> expenses = expenseRepository.findByCategory_CategoryId(categoryId);
+    public void delete(CategoryEntity categoryEntity) throws Exception {
 
-        if (deletedCategory.getType().equals(CategoryType.BASE)) throw new IllegalArgumentException("Can't delete the base category");
-
-        var baseCategory = categoryRepository.findFirstByPlanAndType(deletedCategory.getPlan(), CategoryType.BASE);
+        List<ExpenseEntity> expenses = expenseRepository.findByCategory(categoryEntity);
+        var baseCategory = baseCategoryService.findBaseCategory(categoryEntity.getPlan());
 
         expenses.forEach(expense -> expense.setCategory(baseCategory));
         expenseRepository.saveAll(expenses);
 
-        baseCategory.setTargetValue(baseCategory.getTargetValue().add(deletedCategory.getTargetValue()));
-        baseCategory.setActualValue(baseCategory.getActualValue().add(deletedCategory.getActualValue()));
+        baseCategoryService.adjustTargetValue(categoryEntity.getPlan(), categoryEntity.getTargetValue().negate());
+        baseCategoryService.adjustActualValue(categoryEntity.getPlan(), categoryEntity.getActualValue());
 
-        categoryRepository.delete(deletedCategory);
+        categoryRepository.delete(categoryEntity);
     }
 
     public CategoryEntity updateCategory(UUID categoryId, CategoryDTO categoryDTO) throws Exception {
@@ -71,33 +69,6 @@ public class CategoryService {
         if (categoryDTO.getTargetValue() != null) category.setTargetValue(categoryDTO.getTargetValue());
 
         return categoryRepository.save(category);
-    }
-    
-    public CategoryEntity updateBaseCategory(PlanEntity planEntity, BigDecimal newValue) throws Exception {
-    	
-    	var baseCategory = this.findBaseCategory(planEntity);
-    	var valueChanged = newValue.subtract(planEntity.getInitialCapital());
-    	
-    	baseCategory.setTargetValue(baseCategory.getTargetValue().add(valueChanged));
-
-    	return categoryRepository.save(baseCategory);
-    }
-
-    public void createBaseCategory(PlanEntity planEntity) {
-        if (categoryRepository.existsByPlanAndType(planEntity, CategoryType.BASE)) return;
-
-        CategoryEntity baseCategory = new CategoryEntity();
-        baseCategory.setPlan(planEntity);
-        baseCategory.setDescription("Geral");
-        baseCategory.setType(CategoryType.BASE);
-        baseCategory.setTargetValue(planEntity.getInitialCapital());
-        baseCategory.setActualValue(BigDecimal.ZERO);
-
-        categoryRepository.save(baseCategory);
-    }
-
-    public CategoryEntity findBaseCategory(PlanEntity plan) throws Exception {
-        return categoryRepository.findFirstByPlanAndType(plan ,CategoryType.BASE);
     }
 
 

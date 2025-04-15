@@ -1,10 +1,11 @@
 package com.joaopereira.renda_organziada.services;
 
 import com.joaopereira.renda_organziada.dtos.PlanDTO;
+import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.entities.UserEntity;
-import com.joaopereira.renda_organziada.repositories.CategoryRepository;
+import com.joaopereira.renda_organziada.enums.CategoryType;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
 import org.springframework.stereotype.Service;
@@ -17,14 +18,15 @@ import java.util.UUID;
 public class PlanService {
     final private PlanRepository planRepository;
     final private ExpenseRepository expenseRepository;
-    final private CategoryService categoryService;
-    
-    
-    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository, CategoryService categoryService) {
+    final private BaseCategoryService baseCategoryService;
+    private final CategoryService categoryService;
+
+
+    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository, BaseCategoryService baseCategoryService, CategoryService categoryService) {
         this.planRepository = planRepository;
         this.expenseRepository = expenseRepository;
+        this.baseCategoryService = baseCategoryService;
         this.categoryService = categoryService;
-     
     }
 
     public PlanEntity save(PlanEntity planEntity) throws Exception {
@@ -43,12 +45,17 @@ public class PlanService {
         }
 
         planRepository.save(planEntity);
-        categoryService.createBaseCategory(planEntity);
+
+        if (!baseCategoryService.existsBaseCategory(planEntity)) {
+            var baseCategory = new CategoryEntity();
+            baseCategory.setType(CategoryType.BASE);
+            categoryService.create(planEntity,baseCategory);
+        }
 
         return planEntity;
     }
 
-    public List<PlanEntity> findByAllUser(UserEntity userEntity) throws Exception {
+    public List<PlanEntity> findAllByUser(UserEntity userEntity) throws Exception {
         return planRepository.findByUser(userEntity);
     }
 
@@ -64,7 +71,7 @@ public class PlanService {
 
         plan.getCategories().forEach(categoryEntity -> {
 
-            List<ExpenseEntity> expenses = expenseRepository.findByCategory_CategoryId(categoryEntity.getCategoryId());
+            List<ExpenseEntity> expenses = expenseRepository.findByCategory(categoryEntity);
 
             expenses.forEach(expense -> expense.setCategory(null));
 
@@ -83,10 +90,8 @@ public class PlanService {
         }
 
         if (planDTO.getInitialCapital() != null) {
-           categoryService.updateBaseCategory(plan, planDTO.getInitialCapital());        
-           
+           baseCategoryService.updateBaseCategory(plan, planDTO.getInitialCapital());
            plan.setInitialCapital(planDTO.getInitialCapital());
-        
         }
 
         if (planDTO.getStartDate() != null) {
