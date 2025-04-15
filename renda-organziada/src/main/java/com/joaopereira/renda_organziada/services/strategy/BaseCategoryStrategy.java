@@ -1,8 +1,12 @@
 package com.joaopereira.renda_organziada.services.strategy;
 
 import com.joaopereira.renda_organziada.entities.CategoryEntity;
+import com.joaopereira.renda_organziada.entities.PlanEntity;
+import com.joaopereira.renda_organziada.enums.CategoryType;
 import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @Service
 public class BaseCategoryStrategy implements CategoryStrategy {
@@ -13,7 +17,15 @@ public class BaseCategoryStrategy implements CategoryStrategy {
     }
 
     @Override
-    public CategoryEntity save(CategoryEntity categoryEntity) {
-        return categoryRepository.save(categoryEntity);
+    public CategoryEntity create(PlanEntity planEntity, CategoryEntity categoryEntity) {
+        CategoryEntity baseCategory = new CategoryEntity();
+        baseCategory.setPlan(planEntity);
+        baseCategory.setDescription("Geral");
+        baseCategory.setType(CategoryType.BASE);
+        baseCategory.setTargetValue(planEntity.getInitialCapital());
+        baseCategory.setActualValue(BigDecimal.ZERO);
+
+        return categoryRepository.save(baseCategory);
     }
+
 }

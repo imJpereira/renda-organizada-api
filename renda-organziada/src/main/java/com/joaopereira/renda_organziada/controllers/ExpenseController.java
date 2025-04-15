@@ -6,6 +6,7 @@ import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.UserEntity;
 import com.joaopereira.renda_organziada.repositories.CategoryRepository;
 import com.joaopereira.renda_organziada.services.*;
+import com.joaopereira.renda_organziada.services.strategy.SimpleCategoryStrategy;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
@@ -26,14 +27,16 @@ public class ExpenseController {
     private final PlanService planService;
     private final CategoryRepository categoryRepository;
     private final BaseCategoryService baseCategoryService;
+    private final SimpleCategoryStrategy simpleCategoryStrategy;
 
-    public ExpenseController(ExpenseService expenseService, UserService userService, CategoryService categoryService, PlanService planService, CategoryRepository categoryRepository, BaseCategoryService baseCategoryService) {
+    public ExpenseController(ExpenseService expenseService, UserService userService, CategoryService categoryService, PlanService planService, CategoryRepository categoryRepository, BaseCategoryService baseCategoryService, SimpleCategoryStrategy simpleCategoryStrategy) {
         this.expenseService = expenseService;
         this.userService = userService;
         this.categoryService = categoryService;
         this.planService = planService;
         this.categoryRepository = categoryRepository;
         this.baseCategoryService = baseCategoryService;
+        this.simpleCategoryStrategy = simpleCategoryStrategy;
     }
 
     @PostMapping("/create")
@@ -49,13 +52,13 @@ public class ExpenseController {
 
         var category = (expenseDTO.getCategory() != null)
                 ? categoryService.findByCategoryId(expenseDTO.getCategory())
-                : baseCategoryService.findBaseCategory( planService.findById(expenseDTO.getPlan()));
+                : baseCategoryService.findBaseCategory( planService.findById(expenseDTO.getPlan()) );
 
         newExpense.setCategory(category);
-        category.setActualValue(category.getActualValue().add(newExpense.getValue()));
 
-        categoryRepository.save(category);
-        //categoryService.save(category);
+        category.setActualValue(category.getActualValue().add(newExpense.getValue()));
+        categoryService.save(category);
+
         expenseService.save(newExpense);
 
         return ResponseEntity.ok(newExpense);
@@ -72,7 +75,7 @@ public class ExpenseController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable UUID id) throws Exception {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) throws Exception {
 
         ExpenseEntity expense = expenseService.findById(id);
         if (expense.getCategory() != null) {
@@ -81,7 +84,7 @@ public class ExpenseController {
         }
 
         expenseService.delete(id);
-        return ResponseEntity.ok("Deletado com sucesso");
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/category/{category_id}")

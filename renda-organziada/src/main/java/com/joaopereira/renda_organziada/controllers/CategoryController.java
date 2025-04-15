@@ -50,14 +50,14 @@ public class CategoryController {
         newCategory.setActualValue(BigDecimal.ZERO);
         newCategory.setType(CategoryType.SIMPLE);
 
-        categoryService.save(newCategory);
+        categoryService.create(plan, newCategory);
 
         return ResponseEntity.ok(newCategory);
     }
 
     @DeleteMapping("/delete/{category_id}")
     public ResponseEntity<Void> delete(@PathVariable UUID category_id) throws Exception {
-        categoryService.delete(category_id);
+        categoryService.delete(categoryService.findByCategoryId(category_id));
         return ResponseEntity.noContent().build();
     }
 

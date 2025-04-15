@@ -21,9 +21,10 @@ public class SimpleCategoryStrategy implements CategoryStrategy{
     }
 
     @Override
-    public CategoryEntity save(CategoryEntity categoryEntity) {
-        baseCategoryService.adjustTargetValue(categoryEntity.getPlan(), categoryEntity.getTargetValue());
+    public CategoryEntity create(PlanEntity planEntity, CategoryEntity categoryEntity) {
+        baseCategoryService.adjustTargetValue(planEntity, categoryEntity.getTargetValue());
         return categoryRepository.save(categoryEntity);
     }
+
 }
 

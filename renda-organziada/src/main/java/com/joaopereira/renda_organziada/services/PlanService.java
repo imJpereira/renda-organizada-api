@@ -1,9 +1,11 @@
 package com.joaopereira.renda_organziada.services;
 
 import com.joaopereira.renda_organziada.dtos.PlanDTO;
+import com.joaopereira.renda_organziada.entities.CategoryEntity;
 import com.joaopereira.renda_organziada.entities.ExpenseEntity;
 import com.joaopereira.renda_organziada.entities.PlanEntity;
 import com.joaopereira.renda_organziada.entities.UserEntity;
+import com.joaopereira.renda_organziada.enums.CategoryType;
 import com.joaopereira.renda_organziada.repositories.ExpenseRepository;
 import com.joaopereira.renda_organziada.repositories.PlanRepository;
 import org.springframework.stereotype.Service;
@@ -17,13 +19,14 @@ public class PlanService {
     final private PlanRepository planRepository;
     final private ExpenseRepository expenseRepository;
     final private BaseCategoryService baseCategoryService;
-    
-    
-    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository, BaseCategoryService categoryService) {
+    private final CategoryService categoryService;
+
+
+    public PlanService(PlanRepository planRepository, ExpenseRepository expenseRepository, BaseCategoryService baseCategoryService, CategoryService categoryService) {
         this.planRepository = planRepository;
         this.expenseRepository = expenseRepository;
-        this.baseCategoryService = categoryService;
-     
+        this.baseCategoryService = baseCategoryService;
+        this.categoryService = categoryService;
     }
 
     public PlanEntity save(PlanEntity planEntity) throws Exception {
@@ -42,7 +45,12 @@ public class PlanService {
         }
 
         planRepository.save(planEntity);
-        if (!baseCategoryService.existsBaseCategory(planEntity)) baseCategoryService.createBaseCategory(planEntity);
+
+        if (!baseCategoryService.existsBaseCategory(planEntity)) {
+            var baseCategory = new CategoryEntity();
+            baseCategory.setType(CategoryType.BASE);
+            categoryService.create(planEntity,baseCategory);
+        }
 
         return planEntity;
     }
@@ -63,7 +71,7 @@ public class PlanService {
 
         plan.getCategories().forEach(categoryEntity -> {
 
-            List<ExpenseEntity> expenses = expenseRepository.findByCategory_CategoryId(categoryEntity.getCategoryId());
+            List<ExpenseEntity> expenses = expenseRepository.findByCategory(categoryEntity);
 
             expenses.forEach(expense -> expense.setCategory(null));
 

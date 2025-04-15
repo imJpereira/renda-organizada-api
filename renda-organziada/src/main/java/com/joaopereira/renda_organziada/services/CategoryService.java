@@ -20,17 +20,23 @@ public class CategoryService {
     final private CategoryRepository categoryRepository;
     final private ExpenseRepository expenseRepository;
     private final CategoryStrategyFactory categoryStrategyFactory;
+    private final BaseCategoryService baseCategoryService;
 
-    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository, CategoryStrategyFactory categoryStrategyFactory) {
+    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository, CategoryStrategyFactory categoryStrategyFactory, BaseCategoryService baseCategoryService) {
         this.categoryRepository = categoryRepository;
         this.expenseRepository = expenseRepository;
         this.categoryStrategyFactory = categoryStrategyFactory;
+        this.baseCategoryService = baseCategoryService;
     }
 
     public CategoryEntity save(CategoryEntity category) throws Exception {
+        return categoryRepository.save(category);
+    }
+
+    public CategoryEntity create(PlanEntity planEntity, CategoryEntity categoryEntity) throws Exception {
         return categoryStrategyFactory
-                .getCategoryStrategyMap(category.getType())
-                .save(category);
+                .getCategoryStrategyMap(categoryEntity.getType())
+                .create(planEntity, categoryEntity);
     }
 
     public List<CategoryEntity> findCategories(UUID planId) throws Exception {
@@ -41,14 +47,18 @@ public class CategoryService {
         return categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("Category not found"));
     }
 
-    public void delete(UUID categoryId) throws Exception {
+    public void delete(CategoryEntity categoryEntity) throws Exception {
 
-        List<ExpenseEntity> expenses = expenseRepository.findByCategory_CategoryId(categoryId);
+        List<ExpenseEntity> expenses = expenseRepository.findByCategory(categoryEntity);
+        var baseCategory = baseCategoryService.findBaseCategory(categoryEntity.getPlan());
 
-        expenses.forEach(expense -> expense.setCategory(null));
+        expenses.forEach(expense -> expense.setCategory(baseCategory));
         expenseRepository.saveAll(expenses);
 
-        categoryRepository.deleteById(categoryId);
+        baseCategoryService.adjustTargetValue(categoryEntity.getPlan(), categoryEntity.getTargetValue().negate());
+        baseCategoryService.adjustActualValue(categoryEntity.getPlan(), categoryEntity.getActualValue());
+
+        categoryRepository.delete(categoryEntity);
     }
 
     public CategoryEntity updateCategory(UUID categoryId, CategoryDTO categoryDTO) throws Exception {

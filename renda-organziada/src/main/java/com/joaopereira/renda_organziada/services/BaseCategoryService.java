@@ -18,17 +18,6 @@ public class BaseCategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public void createBaseCategory(PlanEntity planEntity) {
-        CategoryEntity baseCategory = new CategoryEntity();
-        baseCategory.setPlan(planEntity);
-        baseCategory.setDescription("Geral");
-        baseCategory.setType(CategoryType.BASE);
-        baseCategory.setTargetValue(planEntity.getInitialCapital());
-        baseCategory.setActualValue(BigDecimal.ZERO);
-
-        categoryRepository.save(baseCategory);
-    }
-
     public void updateBaseCategory(PlanEntity planEntity, BigDecimal newValue) throws Exception {
 
         var baseCategory = this.findBaseCategory(planEntity);
@@ -56,5 +45,9 @@ public class BaseCategoryService {
             categoryRepository.deleteById(baseCategory.getCategoryId());
     }
 
+    public void adjustActualValue(PlanEntity plan, BigDecimal valueToAdd) {
+        CategoryEntity baseCategory = categoryRepository.findFirstByPlanAndType(plan, CategoryType.BASE);
+        baseCategory.setActualValue(baseCategory.getActualValue().add(valueToAdd));
+    }
 
 }

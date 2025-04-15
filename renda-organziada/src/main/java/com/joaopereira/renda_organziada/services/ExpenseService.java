@@ -43,14 +43,10 @@ public class ExpenseService {
             throw new IllegalArgumentException("Invalid Value: less or equal to zero");
         }
 
-        var category = expense.getCategory();
-        category.setActualValue(category.getActualValue().add(expense.getValue()));
-
         var plan = expense.getCategory().getPlan();
         plan.setTotalSpent(plan.getTotalSpent().add(expense.getValue()));
 
         planRepository.save(plan);
-        categoryRepository.save(category);
         expenseRepository.save(expense);
 
         return expense;

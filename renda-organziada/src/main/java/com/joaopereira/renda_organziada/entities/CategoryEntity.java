@@ -43,6 +43,10 @@ public class CategoryEntity {
     @Enumerated(EnumType.STRING)
     private CategoryType type;
 
+    public CategoryEntity() {
+
+    }
+
 
     // GETTERS AND SETTERS
 
@@ -84,14 +88,6 @@ public class CategoryEntity {
 
     public void setActualValue(BigDecimal actualValue) {
         this.actualValue = actualValue;
-    }
-
-    public List<ExpenseEntity> getExpenses() {
-        return expenses;
-    }
-
-    public void setExpenses(List<ExpenseEntity> expenses) {
-        this.expenses = expenses;
     }
 
     public CategoryType getType() {
