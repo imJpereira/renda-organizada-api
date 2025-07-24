@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import com.joaopereira.renda_organziada.dtos.AuthDTO;
 import com.joaopereira.renda_organziada.entities.UserEntity;
 import com.joaopereira.renda_organziada.services.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,19 +35,22 @@ public class AuthController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((UserEntity) auth.getPrincipal());
+        UserEntity userEntity = (UserEntity) auth.getPrincipal();
 
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        var token = tokenService.generateToken(userEntity);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDTO(token, userEntity));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<UserEntity> create(@RequestBody AuthDTO user) throws Exception {
-         if (userService.findByUsername(user.getUsername()) != null) throw new IllegalArgumentException("Username is already used");
+        if (userService.findByUsername(user.getUsername()) != null) throw new IllegalArgumentException("Username is already used");
 
-         var encryptedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-         UserEntity newUser = new UserEntity(user.getUsername(), user.getEmail(), user.getPassword());
+        var encryptedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
+        UserEntity newUser = new UserEntity(user.getUsername(), user.getEmail(), user.getPassword());
+        userService.save(newUser);
 
-        return ResponseEntity.ok(userService.save(newUser));
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
     @ExceptionHandler

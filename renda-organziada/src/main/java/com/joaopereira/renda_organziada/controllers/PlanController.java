@@ -8,6 +8,7 @@ import com.joaopereira.renda_organziada.services.PlanService;
 import com.joaopereira.renda_organziada.services.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -46,7 +47,7 @@ public class PlanController {
         newPlan.setTotalSpent(BigDecimal.ZERO);
 
         var plan = planService.save(newPlan);
-        return ResponseEntity.ok(plan);
+        return ResponseEntity.status(HttpStatus.CREATED).body(plan);
     }
 
     @GetMapping("/all")

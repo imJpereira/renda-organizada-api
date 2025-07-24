@@ -37,6 +37,8 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //tipo de aplicação
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST,"/auth/**").permitAll() // rotas permitidas sem autenticação
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs*/**").permitAll()
                         .anyRequest().authenticated() // outras rotas devem ter usuário autenticado
 
                 )
